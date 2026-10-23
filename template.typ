@@ -1,7 +1,8 @@
 // Resume layout. All content lives in content.yaml and the list of
 // tailored versions in versions.yaml; this file only controls how it looks.
-// Build with ./build.sh (see README), or directly:
-//   typst compile template.typ --input version=robotics
+// Build with ./build.sh (see README), which also supplies the fonts in fonts/,
+// the version to build, and strict page limits. Compiling this file directly
+// skips those, so use ./build.sh for any PDF you keep.
 
 #import "checks.typ": check-content, check-versions
 
@@ -57,8 +58,9 @@
 #let name-size = 28pt
 #let contact-size = 13pt
 #let rule-stroke = 0.75pt
+#let line-gap = 0.42em  // space between lines and between bullets
 #let section-gap = 12pt // space above each section heading
-#let entry-gap = 6pt    // space between entries in a section
+#let entry-gap = 9pt    // space between entries in a section
 
 #set document(title: data.name + " Resume", author: data.name)
 #set page(
@@ -72,28 +74,51 @@
   },
 )
 #set text(font: body-font, size: body-size, lang: "en")
-#set par(leading: 0.42em, spacing: 0.42em)
+#set par(leading: line-gap, spacing: line-gap)
 // EB Garamond's italic is wider than its roman; shrink it to keep the
 // compact italic lines of the original Word version.
 #show emph: set text(size: 0.91em)
-#set list(marker: [•], indent: 0.1in, body-indent: 0.15in, spacing: 0.45em)
+#set list(marker: [•], indent: 0.1in, body-indent: 0.15in, spacing: line-gap)
 
 // ---- Helpers ----
 
+// Straight quotes become curly ones: opening after a space, bracket, dash or
+// slash (or at the start), closing everywhere else, so apostrophes come out
+// right too.
+#let curly(s) = {
+  s
+    .replace(regex("(^|[\\s(\\[{/–—-])\""), m => m.captures.first() + "“")
+    .replace("\"", "”")
+    .replace(regex("(^|[\\s(\\[{/–—-])'"), m => m.captures.first() + "‘")
+    .replace("'", "’")
+}
+
+// Text from the YAML as it goes on the page: *asterisks* make bold, \* is a
+// literal asterisk, and quotes are curled. A * with a space after it (or
+// before a closing one) isn't markup, so "a * b" stays as written.
+#let rich(s) = {
+  if s == none { return none }
+  let s = curly(s)
+  let out = []
+  let pos = 0
+  for m in s.matches(regex("\\\\\\*|\\*([^\\s*](?:[^*]*[^\\s*\\\\])?)\\*")) {
+    out += s.slice(pos, m.start)
+    out += if m.text == "\\*" { "*" } else { strong(m.captures.first()) }
+    pos = m.end
+  }
+  out + s.slice(pos)
+}
+
 // The visible items of a list (each a string or `{ text, topics }`), joined
 // with commas.
-#let join-items(items) = visible(items).map(text-of).join(", ")
+#let join-items(items) = rich(visible(items).map(text-of).join(", "))
 
-// A bold lead-in followed by plain text, or by a comma-separated list of
-// `items`. No space is added when the text starts with punctuation, so
-// "GPA: 3.68/4.0" + "; Dean's List" reads right.
+// A bullet: plain text, or a bold `label` followed by text or by a
+// comma-separated list of `items`.
 #let labeled(item) = {
-  if type(item) == str { return item }
-  let text-part = text-of(item)
-  if "items" in item { text-part = join-items(item.items) }
-  let gap = if text-part.len() > 0 and text-part.first() in (";", ",", ".") { "" } else { " " }
-  if "label" in item [*#item.label*#gap]
-  text-part
+  if type(item) == str { return rich(item) }
+  let body = if "items" in item { join-items(item.items) } else { rich(text-of(item)) }
+  if "label" in item [#strong(rich(item.label)) #body] else { body }
 }
 
 // One line with content on the left and right edges.
@@ -126,7 +151,7 @@
 #let contact-item(c) = {
   contact-icon
   h(0.3em)
-  if "link" in c { link(c.link, text-of(c)) } else { text-of(c) }
+  if "link" in c { link(c.link, rich(text-of(c))) } else { rich(text-of(c)) }
 }
 
 #underlined({
@@ -141,7 +166,8 @@
 
 // ---- Body ----
 #let section-heading(title) = {
-  block(above: section-gap, below: 4pt, underlined(upper(strong(title))))
+  // Sticky, so a heading is never left alone at the bottom of a page.
+  block(above: section-gap, below: 4pt, sticky: true, underlined(upper(strong(rich(title)))))
 }
 
 // An entry is laid out the same way in every section:
@@ -150,22 +176,26 @@
 //   Stack: ...
 //   • bullets
 // An entry with dates but no role shows its dates on the first line instead.
-#let entry(e) = block(above: entry-gap, below: 0pt, breakable: true, {
+// The first entry in a section sits right under the heading (`first: true`).
+#let entry(e, first: false) = block(above: if first { 0pt } else { entry-gap }, below: 0pt, breakable: true, {
   // A single `role` + `dates` is shorthand for one-item `roles`.
   let roles = if "roles" in e { visible(e.roles) } else if "role" in e {
     ((role: e.role, dates: e.at("dates", default: none)),)
   } else { () }
 
-  if "name" in e {
-    let name = strong(e.name)
-    if "note" in e { name += [ #emph(e.note)] }
-    let right = ()
-    if "location" in e { right.push(emph(e.location)) }
-    if "dates" in e and roles.len() == 0 { right.push(e.dates) }
-    split-line(name, right.join[, ])
-  }
-  for role in roles { split-line(emph(role.role), role.at("dates", default: none)) }
-  if "stack" in e { par[#emph[Stack:] #join-items(e.stack)] }
+  // The heading lines are kept on the same page as the first bullet.
+  if "name" in e or roles.len() > 0 or "stack" in e { block(sticky: true, breakable: false, below: line-gap, {
+    if "name" in e {
+      let name = strong(rich(e.name))
+      if "note" in e { name += [ #emph(rich(e.note))] }
+      let right = ()
+      if "location" in e { right.push(emph(rich(e.location))) }
+      if "dates" in e and roles.len() == 0 { right.push(rich(e.dates)) }
+      split-line(name, right.join[, ])
+    }
+    for role in roles { split-line(emph(rich(role.role)), rich(role.at("dates", default: none))) }
+    if "stack" in e { par[#emph[Stack:] #join-items(e.stack)] }
+  }) }
 
   let bullets = visible(e.at("bullets", default: ()))
   if bullets.len() > 0 { list(..bullets.map(labeled)) }
@@ -182,7 +212,7 @@
   let entries = visible(section.entries)
   if entries.len() > 0 {
     section-heading(section.title)
-    for e in entries { entry(e) }
+    for (i, e) in entries.enumerate() { entry(e, first: i == 0) }
   }
 }
 

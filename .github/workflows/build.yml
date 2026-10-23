@@ -76,7 +76,9 @@ jobs:
 
       # Pushing a tag saves a permanent release holding that one version as it
       # was at the tagged commit, under the plain filename a recruiter sees.
-      # The tag's message, if it has one, becomes the release notes.
+      # The tag's message, if it has one, becomes the release notes. Pushing
+      # a tag name again (after deleting and recreating the tag) replaces its
+      # release instead of failing.
       - name: Create tagged release
         if: startsWith(github.ref, 'refs/tags/')
         env:
@@ -91,6 +93,8 @@ jobs:
           if [ "$(git cat-file -t "$GITHUB_REF_NAME")" = tag ]; then # annotated tag
             notes=$(git tag -l --format='%(contents)' "$GITHUB_REF_NAME")
           fi
+          # No --cleanup-tag: the tag that triggered this run must stay.
+          gh release delete "$GITHUB_REF_NAME" --yes 2>/dev/null || true
           gh release create "$GITHUB_REF_NAME" "out/release/$filename.pdf" \
             --title "$GITHUB_REF_NAME" \
             --notes "${notes:-Resume as of tag $GITHUB_REF_NAME.}"

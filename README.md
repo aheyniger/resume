@@ -50,6 +50,9 @@ Two more tools for tailoring (details in the comments at the top of each file):
   `./build.sh --watch <version>` and the VS Code preview mark the extra pages
   in red instead, so you can see what to cut.
 
+In any text, `*asterisks*` make bold (`\*` for a literal asterisk), and straight
+quotes and apostrophes come out curly.
+
 Misspelled field names, topics that don't appear anywhere in `content.yaml`, and
 unknown section names stop the build with a message saying where the problem is.
 
@@ -85,7 +88,9 @@ git push origin amazon/2026-10-sde-intern
 ```
 
 To tag an older commit, add its hash after the tag name. A plain `git push`
-doesn't push tags. `git tag -l "amazon/*"` lists every release made from a
+doesn't push tags. To redo a release, delete the tag
+(`git tag -d <tag>` and `git push origin :refs/tags/<tag>`), then tag and push
+again; the new release replaces the old one. `git tag -l "amazon/*"` lists every release made from a
 version, and `git checkout <tag>` then `./build.sh <version>` rebuilds one
 locally.
 

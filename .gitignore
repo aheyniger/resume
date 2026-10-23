@@ -1,5 +1,6 @@
 *.pdf
 
-# Build output (CI publishes the PDFs as releases)
+# Build output: build.sh writes PDFs to out/, and CI collects the published
+# ones into site/ for GitHub Pages.
 out/
 site/
