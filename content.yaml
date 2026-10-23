@@ -9,20 +9,19 @@
 # it only appears in versions from versions.yaml that select one of its topics.
 # Anything without topics appears in every version.
 #
-# Entry fields (all optional except title):
-#   title          bold, left of the first line
-#   title-note     italic, right after the title
-#   right          bold, right side of the first line (dates, tech stack)
-#   right-italic   italic instead of bold, right side of the first line
-#   subtitle       italic, left of the second line
-#   subtitle-right italic, right side of the second line
-#   subtitle-bold  bold instead of italic, right side of the second line
-#   details        extra lines on their own, as `{ label, text }`
-#   bullets        strings, or `{ label, text }` for a bold lead-in, or
-#                  `{ label, items }` for a comma-separated list where each
-#                  item is a string or `{ text, topics }`
-# An entry can have `roles` (a list of `{ subtitle, subtitle-right, subtitle-bold }`)
-# instead of a single subtitle, e.g. several degrees at one school.
+# Entry fields (all optional). They say what something is; template.typ
+# decides how it looks:
+#   name      organization, school, or project name
+#   note      short aside after the name, e.g. "(Graduate course project)"
+#   location  city and state
+#   role      job title, degree, or project role
+#   dates     when, as free text, e.g. "June 2025 – Feb. 2026"
+#   roles     several `{ role, dates }` instead of one role + dates, e.g.
+#             degrees at one school, or a promotion
+#   stack     technologies used: a list of strings or `{ text, topics }`
+#   bullets   strings, or `{ label, text }` for a bold lead-in, or
+#             `{ label, items }` for a comma-separated list where each
+#             item is a string or `{ text, topics }`
 
 name: Anders Heyniger
 
@@ -39,13 +38,13 @@ contact:
 sections:
   - title: Education
     entries:
-      - title: Lehigh University
-        right-italic: Bethlehem, PA
+      - name: Lehigh University
+        location: Bethlehem, PA
         roles:
-          - subtitle: M.S. in Computer Science
-            subtitle-bold: "Expected graduation: Dec. 2026"
-          - subtitle: B.S. in Computer Science and Engineering, Minor in Music
-            subtitle-bold: Aug. 2022 – Dec. 2025
+          - role: M.S. in Computer Science
+            dates: "Expected graduation: Dec. 2026"
+          - role: B.S. in Computer Science and Engineering, Minor in Music
+            dates: Aug. 2022 – Dec. 2025
         bullets:
           - label: "GPA: 3.68/4.0"
             text: "; Dean’s List; Upsilon Pi Epsilon Honor Society"
@@ -70,14 +69,12 @@ sections:
 
   - title: Experience
     entries:
-      - title: SpaceX (Space Exploration Technologies Corp)
-        title-note: (NDA-Protected)
-        right: June 2026 – Aug. 2026
-        subtitle: Dragon Flight Software, Software Engineering Intern
-        subtitle-right: Hawthorne, CA
-        details:
-          - label: "Stack:"
-            text: C++, Python
+      - name: SpaceX (Space Exploration Technologies Corp)
+        note: (NDA-Protected)
+        location: Hawthorne, CA
+        role: Dragon Flight Software, Software Engineering Intern
+        dates: June 2026 – Aug. 2026
+        stack: [C++, Python]
         bullets:
           - >-
             Ported and adapted core systems infrastructure code to support a
@@ -94,13 +91,11 @@ sections:
             safety-critical software for human spaceflight, working within
             strict reliability and correctness standards
 
-      - title: Structural Steel Technologies
-        right: June 2025 – Feb. 2026
-        subtitle: Software Engineering Intern (sole developer on all projects)
-        subtitle-right: Nazareth, PA
-        details:
-          - label: "Stack:"
-            text: C++, Java, AWS IoT, Bash, Android, Ubuntu
+      - name: Structural Steel Technologies
+        location: Nazareth, PA
+        role: Software Engineering Intern (sole developer on all projects)
+        dates: June 2025 – Feb. 2026
+        stack: [C++, Java, AWS IoT, Bash, Android, Ubuntu]
         bullets:
           - >-
             Redesigned the crane guidance system's material tracking from two
@@ -127,12 +122,13 @@ sections:
             Wrote Bash deployment scripts; led real-world on-site testing;
             performed codebase and environment cleanup across the full system
 
-      - title: Lehigh University
-        right: Aug 2023 – June 2025
-        subtitle: >-
-          Head Teaching Assistant (Aug 2024 – June 2025) |
-          Teaching Assistant (Aug 2023 – Jul 2024)
-        subtitle-right: Bethlehem, PA
+      - name: Lehigh University
+        location: Bethlehem, PA
+        roles:
+          - role: Head Teaching Assistant
+            dates: Aug 2024 – June 2025
+          - role: Teaching Assistant
+            dates: Aug 2023 – Jul 2024
         bullets:
           - >-
             Supported 300+ students/semester in Python programming, hardware
@@ -145,12 +141,14 @@ sections:
 
   - title: Projects
     entries:
-      - title: Mars Rover (University Rover Challenge)
+      - name: Mars Rover (University Rover Challenge)
         topics: [robotics]
-        right: C++, ROS2, Docker, Jetson, Raspberry Pi
-        subtitle: >-
-          Lead Software Engineer (April 2025 – March 2026) |
-          Software Engineer (Jan 2025 – April 2025)
+        roles:
+          - role: Lead Software Engineer
+            dates: April 2025 – March 2026
+          - role: Software Engineer
+            dates: Jan 2025 – April 2025
+        stack: [C++, ROS2, Docker, Jetson, Raspberry Pi]
         bullets:
           - >-
             Lead software engineer on a university competition rover;
@@ -163,11 +161,12 @@ sections:
             rover
           - Onboarded and mentored new team members; assigned and guided development tasks
 
-      - title: Miniature Driverless Car
+      - name: Miniature Driverless Car
+        note: (Undergrad capstone)
         topics: [robotics]
-        right: Python, ROS, Jetson, Azure Kinect DK
-        subtitle: Software Engineer, Hardware Maintenance
-        subtitle-right: Undergrad capstone, all of 2025
+        role: Software Engineer, Hardware Maintenance
+        dates: "2025"
+        stack: [Python, ROS, Jetson, Azure Kinect DK]
         bullets:
           - >-
             Led development of an autonomous RC car using a Traxxas chassis,
@@ -177,11 +176,11 @@ sections:
             SDK; wrote vehicle deployment scripts and performed servo
             calibration
 
-      - title: Distributed Hash Table
+      - name: Distributed Hash Table
+        note: (Graduate course project)
         topics: [systems, webdev]
-        right: C++, Bash
-        subtitle: Graduate course project
-        subtitle-right: Jan 2026 – Present
+        dates: Jan 2026 – Present
+        stack: [C++, Bash]
         bullets:
           - >-
             Designed and implemented a distributed hash table from scratch with
@@ -193,19 +192,20 @@ sections:
             test client; extending with Paxos consensus and fault tolerance in
             future
 
-      - title: Full Stack Messaging App
+      - name: Full Stack Messaging App
+        note: (Undergrad course project)
         topics: [webdev]
-        right: JavaScript, Java, React, Javalin, NodeJS, Maven, PostgreSQL
-        subtitle: Team Lead, Full-stack Development
-        subtitle-right: Undergrad course project, late 2024
+        role: Team Lead, Full-stack Development
+        dates: Late 2024
+        stack: [JavaScript, Java, React, Javalin, NodeJS, Maven, PostgreSQL]
         bullets:
           - >-
             Built a full-stack messaging app as team lead; implemented Google
             OAuth 2.0 authentication, REST API backend, and contributed across
             the full stack
 
-      - title: Simple Interpreted Language
-        right: Rust
+      - name: Simple Interpreted Language
+        stack: [Rust]
         bullets:
           - >-
             Designed and implemented a Turing-complete interpreted language

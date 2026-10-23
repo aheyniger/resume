@@ -8,12 +8,8 @@
 #let common-fields = ("hide", "topics")
 
 // The fields each kind of item may have.
-#let entry-fields = (
-  "title", "title-note", "right", "right-italic",
-  "subtitle", "subtitle-right", "subtitle-bold",
-  "roles", "details", "bullets",
-)
-#let role-fields = ("subtitle", "subtitle-right", "subtitle-bold")
+#let entry-fields = ("name", "note", "location", "role", "dates", "roles", "stack", "bullets")
+#let role-fields = ("role", "dates")
 #let labeled-fields = ("label", "text", "items")
 
 #let check-fields(file, path, obj, allowed) = {
@@ -52,20 +48,26 @@
   check-list-of-strings(file, path, obj, "topics")
 }
 
-// A bullet, detail line, or list item: plain text, or a set of fields.
-#let check-labeled(path, item) = {
-  if type(item) == str { return }
-  check-item(path, item, labeled-fields)
-  if "text" not in item and "items" not in item {
-    fail("content.yaml", path, "needs 'text' or 'items'")
-  }
-  for (i, sub) in item.at("items", default: ()).enumerate() {
+// A list of items, each plain text or `{ text, topics, hide }`.
+#let check-items(path, items) = {
+  if type(items) != array { fail("content.yaml", path, "must be a list, got " + repr(items)) }
+  for (i, sub) in items.enumerate() {
     let sub-path = path + " > item " + str(i + 1)
     if type(sub) != str {
       check-item(sub-path, sub, ("text",))
       check-required("content.yaml", sub-path, sub, "text")
     }
   }
+}
+
+// A bullet: plain text, or a set of fields.
+#let check-labeled(path, item) = {
+  if type(item) == str { return }
+  check-item(path, item, labeled-fields)
+  if "text" not in item and "items" not in item {
+    fail("content.yaml", path, "needs 'text' or 'items'")
+  }
+  if "items" in item { check-items(path, item.items) }
 }
 
 #let check-content(data) = {
@@ -89,15 +91,23 @@
     check-required(file, path, section, "entries")
 
     for (j, entry) in section.entries.enumerate() {
-      let entry-path = path + " > " + entry.at("title", default: "entry " + str(j + 1))
+      let entry-path = path + " > " + entry.at("name", default: "entry " + str(j + 1))
       check-item(entry-path, entry, entry-fields)
-      for (k, role) in entry.at("roles", default: ()).enumerate() {
-        check-item(entry-path + " > role " + str(k + 1), role, role-fields)
-      }
-      for (key, name) in (("details", "detail"), ("bullets", "bullet")) {
-        for (k, item) in entry.at(key, default: ()).enumerate() {
-          check-labeled(entry-path + " > " + name + " " + str(k + 1), item)
+      if "roles" in entry {
+        for key in ("role", "dates") {
+          if key in entry {
+            fail(file, entry-path, "has both 'roles' and '" + key + "'; put each role's dates inside 'roles'")
+          }
         }
+      }
+      for (k, role) in entry.at("roles", default: ()).enumerate() {
+        let role-path = entry-path + " > role " + str(k + 1)
+        check-item(role-path, role, role-fields)
+        check-required(file, role-path, role, "role")
+      }
+      if "stack" in entry { check-items(entry-path + " > stack", entry.stack) }
+      for (k, item) in entry.at("bullets", default: ()).enumerate() {
+        check-labeled(entry-path + " > bullet " + str(k + 1), item)
       }
     }
   }

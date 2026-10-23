@@ -50,15 +50,17 @@
 
 // ---- Helpers ----
 
+// The visible items of a list (each a string or `{ text, topics }`), joined
+// with commas.
+#let join-items(items) = visible(items).map(i => if type(i) == str { i } else { i.text }).join(", ")
+
 // A bold lead-in followed by plain text, or by a comma-separated list of
-// `items` (each a string or `{ text, topics }`). No space is added when the
-// text starts with punctuation, so "GPA: 3.68/4.0" + "; Dean's List" reads right.
+// `items`. No space is added when the text starts with punctuation, so
+// "GPA: 3.68/4.0" + "; Dean's List" reads right.
 #let labeled(item) = {
   if type(item) == str { return item }
   let text-part = item.at("text", default: "")
-  if "items" in item {
-    text-part = visible(item.items).map(i => if type(i) == str { i } else { i.text }).join(", ")
-  }
+  if "items" in item { text-part = join-items(item.items) }
   let gap = if text-part.len() > 0 and text-part.first() in (";", ",", ".") { "" } else { " " }
   if "label" in item [*#item.label*#gap]
   text-part
@@ -112,21 +114,29 @@
   block(above: section-gap, below: 4pt, underlined(upper(strong(title))))
 }
 
-#let role-line(role) = {
-  let right = if "subtitle-bold" in role { strong(role.at("subtitle-bold")) } else { emph(role.at("subtitle-right", default: "")) }
-  split-line(emph(role.at("subtitle", default: "")), right)
-}
-
+// An entry is laid out the same way in every section:
+//   Name (note)                         Location
+//   Role                                   Dates   (one line per role)
+//   Stack: ...
+//   • bullets
+// An entry with dates but no role shows its dates on the first line instead.
 #let entry(e) = block(above: entry-gap, below: 0pt, breakable: true, {
-  if "title" in e {
-    let title = strong(e.title)
-    if "title-note" in e { title += [ #emph(e.at("title-note"))] }
-    let right = if "right-italic" in e { emph(e.at("right-italic")) } else { strong(e.at("right", default: "")) }
-    split-line(title, right)
+  // A single `role` + `dates` is shorthand for one-item `roles`.
+  let roles = if "roles" in e { visible(e.roles) } else if "role" in e {
+    ((role: e.role, dates: e.at("dates", default: none)),)
+  } else { () }
+
+  if "name" in e {
+    let name = strong(e.name)
+    if "note" in e { name += [ #emph(e.note)] }
+    let right = ()
+    if "location" in e { right.push(emph(e.location)) }
+    if "dates" in e and roles.len() == 0 { right.push(e.dates) }
+    split-line(name, right.join[, ])
   }
-  let roles = e.at("roles", default: if "subtitle" in e or "subtitle-right" in e { (e,) } else { () })
-  for role in visible(roles) { role-line(role) }
-  for d in visible(e.at("details", default: ())) { par(labeled(d)) }
+  for role in roles { split-line(emph(role.role), role.at("dates", default: none)) }
+  if "stack" in e { par[#emph[Stack:] #join-items(e.stack)] }
+
   let bullets = visible(e.at("bullets", default: ()))
   if bullets.len() > 0 { list(..bullets.map(labeled)) }
 })
