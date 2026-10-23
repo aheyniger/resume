@@ -46,30 +46,17 @@ holding just that version, as `aheyniger_resume.pdf`, exactly as it was at the
 tagged commit. The tag's message (with `-a -m`) becomes the release notes. The
 version can be one marked `build: false`, so one-off versions stay off Pages.
 
-A tag points at a commit, so only committed changes are captured. There are two
-ways to use it:
-
-**Tag a commit you already have**, e.g. a normal update to `main` you also
-want to keep a copy of. No extra commit needed:
+A tag points at a commit, so commit any changes first. Then:
 
 ```bash
-git tag -a full/2026-11-acme -m "Acme SWE Intern"   # tags the latest commit
-git tag -a full/2026-11-acme <commit> -m "..."      # or an older commit
-git push origin full/2026-11-acme
+git tag -a amazon/2026-10-sde-intern -m "Amazon SDE Intern, Summer 2027"  # tags the latest commit
+git push origin amazon/2026-10-sde-intern
 ```
 
-**Make a commit specifically for the release**, e.g. after adding an `amazon`
-version (with `build: false`) to `versions.yaml`:
-
-```bash
-git commit -am "Amazon version"
-git tag -a amazon/2026-10-sde-intern -m "Amazon SDE Intern, Summer 2027"
-git push origin main amazon/2026-10-sde-intern
-```
-
-A plain `git push` doesn't push tags. `git tag -l "amazon/*"` lists every
-release made from a version, and `git checkout <tag>` then `./build.sh <version>`
-rebuilds one locally.
+To tag an older commit, add its hash after the tag name. A plain `git push`
+doesn't push tags. `git tag -l "amazon/*"` lists every release made from a
+version, and `git checkout <tag>` then `./build.sh <version>` rebuilds one
+locally.
 
 Fonts (EB Garamond, SIL Open Font License) live in `fonts/`, and builds use only
 those, so local and CI PDFs are identical. VS Code's Tinymist preview is
