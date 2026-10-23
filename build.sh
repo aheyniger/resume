@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Builds resume PDFs into out/, named from versions.yaml.
 #
-#   ./build.sh                    build every version
+#   ./build.sh                    build every version without `build: false`
 #   ./build.sh robotics webdev    build just those versions
 #   ./build.sh --watch [version]  rebuild one version on every save
 #                                 (default: the default version)
@@ -18,7 +18,7 @@ config() { typst eval "yaml(\"versions.yaml\").$1" --format yaml; }
 
 filename=$(config filename)
 default=$(config default)
-all_versions=$(config 'versions.keys().join(" ")')
+all_versions=$(config 'versions.pairs().filter(((k, v)) => v.at("build", default: true)).map(((k, v)) => k).join(" ")')
 
 pdf_path() {
   if [ "$1" = "$default" ]; then

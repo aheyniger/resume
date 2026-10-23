@@ -8,6 +8,8 @@
 #             Items with no `tags` in resume-info.yaml are always included.
 #   sections  optional: section titles in the order to show them (others
 #             are dropped). Leave it out to use the order in resume-info.yaml.
+#   build     optional: set to false to skip this version when building
+#             everything (CI included). `./build.sh <version>` still builds it.
 
 filename: aheyniger_resume
 default: full
