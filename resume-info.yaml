@@ -1,0 +1,207 @@
+# Resume data, rendered by resume.typ.
+#
+# Sections render in the order listed. Any section, entry, bullet, or skill
+# can be left out of the PDF by adding `hide: true` to it (bullets need the
+# `{ text: ..., hide: true }` form), so this file can stay a master resume.
+#
+# Entry fields (all optional except title):
+#   title          bold, left of the first line
+#   title-note     italic, right after the title
+#   right          bold, right side of the first line (dates, tech stack)
+#   right-italic   italic instead of bold, right side of the first line
+#   subtitle       italic, left of the second line
+#   subtitle-right italic, right side of the second line
+#   subtitle-bold  bold instead of italic, right side of the second line
+#   details        extra lines on their own, as `{ label, text }`
+#   bullets        strings, or `{ label, text }` for a bold lead-in
+# An entry can have `roles` (a list of `{ subtitle, subtitle-right, subtitle-bold }`)
+# instead of a single subtitle, e.g. several degrees at one school.
+
+name: Anders Heyniger
+
+contact:
+  - text: anders.heyniger@gmail.com
+    link: mailto:anders.heyniger@gmail.com
+  - text: XXX-XXX-XXXX
+    link: tel:+1XXX-XXX-XXXX
+  - text: github.com/aheyniger
+    link: https://github.com/aheyniger
+  - text: linkedin.com/in/anders-heyniger
+    link: https://linkedin.com/in/anders-heyniger
+
+sections:
+  - title: Education
+    entries:
+      - title: Lehigh University
+        right-italic: Bethlehem, PA
+        roles:
+          - subtitle: M.S. in Computer Science
+            subtitle-bold: "Expected graduation: Dec. 2026"
+          - subtitle: B.S. in Computer Science and Engineering, Minor in Music
+            subtitle-bold: Aug. 2022 – Dec. 2025
+        bullets:
+          - label: "GPA: 3.68/4.0"
+            text: "; Dean’s List; Upsilon Pi Epsilon Honor Society"
+          - label: "Relevant Courses:"
+            text: >-
+              Design & Analysis of Algorithms, Data Structures, Embedded Systems,
+              Database Systems & Applications, Web Systems Programming,
+              Systems & Network Administration, AI Game Programming,
+              Game Design Studio, Foundations of Electrical Engineering,
+              Advanced Algorithms, Theory of Computation, Distributed Systems,
+              Software Performance Engineering, Mobile Robotics,
+              Computer Graphics, Operating System Design
+
+  - title: Experience
+    entries:
+      - title: SpaceX (Space Exploration Technologies Corp)
+        title-note: (NDA-Protected)
+        right: June 2026 – Aug. 2026
+        subtitle: Dragon Flight Software, Software Engineering Intern
+        subtitle-right: Hawthorne, CA
+        details:
+          - label: "Stack:"
+            text: C++, Python
+        bullets:
+          - >-
+            Ported and adapted core systems infrastructure code to support a
+            new hardware platform, enabling compatibility for safety-critical
+            spaceflight software
+          - >-
+            Implemented support for a networked, Ethernet-based data-sharing
+            subsystem on the new hardware platform
+          - >-
+            Extended existing continuous integration/testing pipelines with new
+            hardware calibration checks
+          - >-
+            Collaborated with a fast-paced engineering team to deliver
+            safety-critical software for human spaceflight, working within
+            strict reliability and correctness standards
+
+      - title: Structural Steel Technologies
+        right: June 2025 – Feb. 2026
+        subtitle: Software Engineering Intern (sole developer on all projects)
+        subtitle-right: Nazareth, PA
+        details:
+          - label: "Stack:"
+            text: C++, Java, AWS IoT, Bash, Android, Ubuntu
+        bullets:
+          - >-
+            Redesigned the crane guidance system's material tracking from two
+            fixed locations to a dynamic "lifting list"; wrote 4,000+ lines of
+            new C++ (Linux) and Java (Android), refactored 10,000+ lines of
+            existing code
+          - >-
+            Designed JSON schema and MQTT topic structure for inter-device
+            communication; built data structures for efficient list navigation
+            and material targeting
+          - >-
+            Built UI/UX features for both the Qt-based crane operator interface
+            and the Android operator app using Android Studio and Gradle
+          - >-
+            Migrated the entire system to AWS IoT Core as MQTT broker;
+            implemented mTLS authentication with device-bound security
+            certificates
+          - >-
+            Built a multithreaded asynchronous pipeline to upload a live
+            high-resolution camera feed to AWS S3 without interfering with the
+            real-time operator feed; exposed data via web interface using
+            pre-signed S3 URLs
+          - >-
+            Wrote Bash deployment scripts; led real-world on-site testing;
+            performed codebase and environment cleanup across the full system
+
+      - title: Lehigh University
+        right: Aug 2023 – June 2025
+        subtitle: >-
+          Head Teaching Assistant (Aug 2024 – June 2025) |
+          Teaching Assistant (Aug 2023 – Jul 2024)
+        subtitle-right: Bethlehem, PA
+        bullets:
+          - >-
+            Supported 300+ students/semester in Python programming, hardware
+            interfacing (Raspberry Pi, LEDs, robot car), and Linux/networking
+            troubleshooting
+          - >-
+            As Head TA: planned and led lab sessions, created educational video
+            content, mentored and coordinated teams of junior TAs, and
+            co-designed the course alongside the professor
+
+  - title: Projects
+    entries:
+      - title: Mars Rover (University Rover Challenge)
+        right: C++, ROS2, Docker, Jetson, Raspberry Pi
+        subtitle: >-
+          Lead Software Engineer (April 2025 – March 2026) |
+          Software Engineer (Jan 2025 – April 2025)
+        bullets:
+          - >-
+            Lead software engineer on a university competition rover;
+            redesigned the drive system to support a new CAN-bus motor
+            architecture via Raspberry Pi
+          - >-
+            Built a ROS2 hardware plugin (ros2_control), PWM reader for motor
+            feedback, and joystick control interface; began development of a
+            Pi-based hardware testbed for software testing without the physical
+            rover
+          - Onboarded and mentored new team members; assigned and guided development tasks
+
+      - title: Miniature Driverless Car
+        right: Python, ROS, Jetson, Azure Kinect DK
+        subtitle: Software Engineer, Hardware Maintenance
+        subtitle-right: Undergrad capstone, all of 2025
+        bullets:
+          - >-
+            Led development of an autonomous RC car using a Traxxas chassis,
+            onboard Jetson for compute, and an Azure Kinect DK for perception
+          - >-
+            Resolved Ubuntu 22.04 compatibility with the deprecated Azure Kinect
+            SDK; wrote vehicle deployment scripts and performed servo
+            calibration
+
+      - title: Distributed Hash Table
+        right: C++, Bash
+        subtitle: Graduate course project
+        subtitle-right: Jan 2026 – Present
+        bullets:
+          - >-
+            Designed and implemented a distributed hash table from scratch with
+            value replication, two-phase commit for consistency, and a
+            multithreaded architecture that keeps worker threads maximally
+            active
+          - >-
+            Includes a Bash deployment script, custom configuration format, and
+            test client; extending with Paxos consensus and fault tolerance in
+            future
+
+      - title: Full Stack Messaging App
+        right: JavaScript, Java, React, Javalin, NodeJS, Maven, PostgreSQL
+        subtitle: Team Lead, Full-stack Development
+        subtitle-right: Undergrad course project, late 2024
+        bullets:
+          - >-
+            Built a full-stack messaging app as team lead; implemented Google
+            OAuth 2.0 authentication, REST API backend, and contributed across
+            the full stack
+
+      - title: Simple Interpreted Language
+        right: Rust
+        bullets:
+          - >-
+            Designed and implemented a Turing-complete interpreted language
+            from scratch in Rust; the interpreter tokenizes, parses, and
+            directly executes source code
+
+  - title: Skills
+    entries:
+      - bullets:
+          - label: "Languages:"
+            text: C++, Java, JavaScript, Python, Bash, SQL, Rust
+          - label: "Frameworks & Libraries:"
+            text: ROS2, React, Boost, Android SDK, WebGL
+          - label: "Tools & Platforms:"
+            text: AWS (IoT Core, S3), Docker, Git, Linux, Node.js
+          - label: "Other:"
+            text: Agile/Scrum methodologies, Jira
+          - label: "Interests:"
+            text: Speedcubing, trombone (11 years, section leader), game design, film
