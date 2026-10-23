@@ -1,8 +1,12 @@
 # Resume data, rendered by resume.typ.
 #
-# Sections render in the order listed. Any section, entry, bullet, or skill
-# can be left out of the PDF by adding `hide: true` to it (bullets need the
-# `{ text: ..., hide: true }` form), so this file can stay a master resume.
+# Sections render in the order listed. Any section, entry, bullet, or list
+# item can be left out of the PDF by adding `hide: true` to it (plain-string
+# bullets need the `{ text: ..., hide: true }` form).
+#
+# Tailoring: give any of those a `tags` list (e.g. `tags: [robotics]`) and it
+# only appears in versions from versions.yaml that select one of its tags.
+# Anything without tags appears in every version.
 #
 # Entry fields (all optional except title):
 #   title          bold, left of the first line
@@ -13,7 +17,9 @@
 #   subtitle-right italic, right side of the second line
 #   subtitle-bold  bold instead of italic, right side of the second line
 #   details        extra lines on their own, as `{ label, text }`
-#   bullets        strings, or `{ label, text }` for a bold lead-in
+#   bullets        strings, or `{ label, text }` for a bold lead-in, or
+#                  `{ label, items }` for a comma-separated list where each
+#                  item is a string or `{ text, tags }`
 # An entry can have `roles` (a list of `{ subtitle, subtitle-right, subtitle-bold }`)
 # instead of a single subtitle, e.g. several degrees at one school.
 
@@ -43,14 +49,23 @@ sections:
           - label: "GPA: 3.68/4.0"
             text: "; Dean’s List; Upsilon Pi Epsilon Honor Society"
           - label: "Relevant Courses:"
-            text: >-
-              Design & Analysis of Algorithms, Data Structures, Embedded Systems,
-              Database Systems & Applications, Web Systems Programming,
-              Systems & Network Administration, AI Game Programming,
-              Game Design Studio, Foundations of Electrical Engineering,
-              Advanced Algorithms, Theory of Computation, Distributed Systems,
-              Software Performance Engineering, Mobile Robotics,
-              Computer Graphics, Operating System Design
+            items:
+              - Design & Analysis of Algorithms
+              - Data Structures
+              - { text: Embedded Systems, tags: [robotics, systems] }
+              - { text: Database Systems & Applications, tags: [webdev] }
+              - { text: Web Systems Programming, tags: [webdev] }
+              - { text: Systems & Network Administration, tags: [systems, webdev] }
+              - { text: AI Game Programming, tags: [gamedev] }
+              - { text: Game Design Studio, tags: [gamedev] }
+              - { text: Foundations of Electrical Engineering, tags: [robotics] }
+              - Advanced Algorithms
+              - Theory of Computation
+              - { text: Distributed Systems, tags: [systems, webdev] }
+              - { text: Software Performance Engineering, tags: [systems, gamedev] }
+              - { text: Mobile Robotics, tags: [robotics] }
+              - { text: Computer Graphics, tags: [gamedev] }
+              - { text: Operating System Design, tags: [systems] }
 
   - title: Experience
     entries:
@@ -130,6 +145,7 @@ sections:
   - title: Projects
     entries:
       - title: Mars Rover (University Rover Challenge)
+        tags: [robotics]
         right: C++, ROS2, Docker, Jetson, Raspberry Pi
         subtitle: >-
           Lead Software Engineer (April 2025 – March 2026) |
@@ -147,6 +163,7 @@ sections:
           - Onboarded and mentored new team members; assigned and guided development tasks
 
       - title: Miniature Driverless Car
+        tags: [robotics]
         right: Python, ROS, Jetson, Azure Kinect DK
         subtitle: Software Engineer, Hardware Maintenance
         subtitle-right: Undergrad capstone, all of 2025
@@ -160,6 +177,7 @@ sections:
             calibration
 
       - title: Distributed Hash Table
+        tags: [systems, webdev]
         right: C++, Bash
         subtitle: Graduate course project
         subtitle-right: Jan 2026 – Present
@@ -175,6 +193,7 @@ sections:
             future
 
       - title: Full Stack Messaging App
+        tags: [webdev]
         right: JavaScript, Java, React, Javalin, NodeJS, Maven, PostgreSQL
         subtitle: Team Lead, Full-stack Development
         subtitle-right: Undergrad course project, late 2024
@@ -196,11 +215,28 @@ sections:
     entries:
       - bullets:
           - label: "Languages:"
-            text: C++, Java, JavaScript, Python, Bash, SQL, Rust
+            items:
+              - C++
+              - Java
+              - JavaScript
+              - Python
+              - Bash
+              - { text: SQL, tags: [webdev] }
+              - Rust
           - label: "Frameworks & Libraries:"
-            text: ROS2, React, Boost, Android SDK, WebGL
+            items:
+              - { text: ROS2, tags: [robotics] }
+              - { text: React, tags: [webdev] }
+              - Boost
+              - Android SDK
+              - { text: WebGL, tags: [webdev, gamedev] }
           - label: "Tools & Platforms:"
-            text: AWS (IoT Core, S3), Docker, Git, Linux, Node.js
+            items:
+              - AWS (IoT Core, S3)
+              - Docker
+              - Git
+              - Linux
+              - { text: Node.js, tags: [webdev] }
           - label: "Other:"
             text: Agile/Scrum methodologies, Jira
           - label: "Interests:"

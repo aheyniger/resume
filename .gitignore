@@ -1,1 +1,4 @@
 *.pdf
+
+# Build output (CI publishes the PDFs as releases)
+out/

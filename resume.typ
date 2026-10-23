@@ -1,10 +1,35 @@
-// Resume layout. All content lives in resume-info.yaml; this file only
-// controls how it looks. Build with: typst compile resume.typ
+// Resume layout. All content lives in resume-info.yaml and the list of
+// tailored versions in versions.yaml; this file only controls how it looks.
+// Build with ./build.sh (see README), or directly:
+//   typst compile resume.typ --input version=robotics
 
 #let data = yaml("resume-info.yaml")
+#let config = yaml("versions.yaml")
+
+// ---- Version selection ----
+#let version-name = sys.inputs.at("version", default: config.default)
+#assert(
+  version-name in config.versions,
+  message: "unknown version '" + version-name + "', expected one of: " + config.versions.keys().join(", "),
+)
+#let version = config.versions.at(version-name)
+#let version-tags = version.at("tags", default: "all")
+
+// An item is shown unless it has `hide: true`, or it has `tags` and none of
+// them are selected by the current version. Untagged items always show.
+#let included(it) = {
+  if type(it) != dictionary { return true }
+  if it.at("hide", default: false) { return false }
+  let tags = it.at("tags", default: ())
+  if type(tags) == str { tags = (tags,) }
+  version-tags == "all" or tags.len() == 0 or tags.any(t => t in version-tags)
+}
+#let visible(items) = items.filter(included)
 
 // ---- Style knobs ----
-#let body-font = "Garamond"
+// Garamond ships with Windows/Office; CI has no copy and passes the free
+// EB Garamond instead via `--input font=...` (see build.sh).
+#let body-font = sys.inputs.at("font", default: "Garamond")
 #let body-size = 12pt
 #let name-size = 28pt
 #let contact-size = 13pt
@@ -19,13 +44,16 @@
 #set list(marker: [•], indent: 0.1in, body-indent: 0.15in, spacing: 0.45em)
 
 // ---- Helpers ----
-#let visible(items) = items.filter(it => type(it) != dictionary or not it.at("hide", default: false))
 
-// A bold lead-in followed by plain text. No space is added when the text
-// starts with punctuation, so "GPA: 3.68/4.0" + "; Dean's List" reads right.
+// A bold lead-in followed by plain text, or by a comma-separated list of
+// `items` (each a string or `{ text, tags }`). No space is added when the
+// text starts with punctuation, so "GPA: 3.68/4.0" + "; Dean's List" reads right.
 #let labeled(item) = {
   if type(item) == str { return item }
   let text-part = item.at("text", default: "")
+  if "items" in item {
+    text-part = visible(item.items).map(i => if type(i) == str { i } else { i.text }).join(", ")
+  }
   let gap = if text-part.len() > 0 and text-part.first() in (";", ",", ".") { "" } else { " " }
   if "label" in item [*#item.label*#gap]
   text-part
@@ -47,7 +75,17 @@
 )
 
 // ---- Header ----
-#let contact-icon = text(font: "Segoe UI Symbol", size: 0.8em, baseline: -0.05em)[❖]
+// A ❖ drawn from four small diamonds, so it doesn't depend on a symbol font.
+#let contact-icon = {
+  let d = 0.27em
+  let diamond = polygon(fill: black, (d / 2, 0pt), (d, d / 2), (d / 2, d), (0pt, d / 2))
+  box(width: 2 * d + 0.06em, height: 2 * d + 0.06em, baseline: 0.05em, {
+    place(dx: d / 2 + 0.03em, dy: 0pt, diamond)
+    place(dx: 0pt, dy: d / 2 + 0.03em, diamond)
+    place(dx: d + 0.06em, dy: d / 2 + 0.03em, diamond)
+    place(dx: d / 2 + 0.03em, dy: d + 0.06em, diamond)
+  })
+}
 #let contact-item(c) = {
   contact-icon
   h(0.3em)
@@ -82,13 +120,26 @@
     split-line(title, right)
   }
   let roles = e.at("roles", default: if "subtitle" in e or "subtitle-right" in e { (e,) } else { () })
-  for role in roles { role-line(role) }
+  for role in visible(roles) { role-line(role) }
   for d in visible(e.at("details", default: ())) { par(labeled(d)) }
   let bullets = visible(e.at("bullets", default: ()))
   if bullets.len() > 0 { list(..bullets.map(labeled)) }
 })
 
-#for section in visible(data.sections) {
-  section-heading(section.title)
-  for e in visible(section.entries) { entry(e) }
+// A version can reorder or drop sections by listing their titles.
+#let sections = visible(data.sections)
+#if "sections" in version {
+  sections = version.sections.map(t => {
+    let found = sections.filter(s => s.title == t)
+    assert(found.len() > 0, message: "version '" + version-name + "' lists unknown section '" + t + "'")
+    found.first()
+  })
+}
+
+#for section in sections {
+  let entries = visible(section.entries)
+  if entries.len() > 0 {
+    section-heading(section.title)
+    for e in entries { entry(e) }
+  }
 }

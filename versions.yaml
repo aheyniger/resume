@@ -1,0 +1,26 @@
+# Tailored versions of the resume, built by build.sh and GitHub Actions.
+#
+# The default version builds to <filename>.pdf; every other version builds
+# to <filename>_<version>.pdf.
+#
+# Per version:
+#   tags      which tagged items to include: `all`, or a list of tags.
+#             Items with no `tags` in resume-info.yaml are always included.
+#   sections  optional: section titles in the order to show them (others
+#             are dropped). Leave it out to use the order in resume-info.yaml.
+
+filename: aheyniger_resume
+default: full
+
+versions:
+  full:
+    tags: all
+
+  robotics:
+    tags: [robotics, systems]
+
+  webdev:
+    tags: [webdev]
+
+  gamedev:
+    tags: [gamedev]
