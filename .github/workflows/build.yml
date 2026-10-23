@@ -20,17 +20,7 @@ jobs:
         with:
           typst-version: 0.15.1
 
-      # Garamond is a Windows/Office font, so use the free EB Garamond here.
-      - name: Install fonts
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y fonts-ebgaramond
-          family=$(typst fonts | grep -i -m1 "eb garamond" || true)
-          if [ -z "$family" ]; then
-            echo "EB Garamond not found; available fonts:"; typst fonts; exit 1
-          fi
-          echo "RESUME_FONT=$family" >> "$GITHUB_ENV"
-
+      # Fonts come from fonts/ in the repo, so nothing needs installing.
       - name: Build PDFs
         run: bash build.sh
 

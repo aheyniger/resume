@@ -1,0 +1,5 @@
+{
+  // Make the Tinymist preview use the same fonts as build.sh and CI.
+  "tinymist.fontPaths": ["${workspaceFolder}/fonts"],
+  "tinymist.systemFonts": false
+}

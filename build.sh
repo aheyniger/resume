@@ -6,8 +6,9 @@
 #   ./build.sh --watch [version]  rebuild one version on every save
 #                                 (default: the default version)
 #
-# Extra fonts can be dropped in fonts/ and are picked up automatically.
-# Set RESUME_FONT to use a different body font than Garamond (CI does this).
+# Only the fonts in fonts/ (plus Typst's built-in ones) are used, so builds
+# look identical on every machine and a missing font is an error, not a
+# silent substitution.
 set -euo pipefail
 cd "$(dirname "$0")"
 
@@ -28,10 +29,7 @@ pdf_path() {
   fi
 }
 
-typst_args=(resume.typ --font-path fonts)
-if [ -n "${RESUME_FONT:-}" ]; then
-  typst_args+=(--input "font=$RESUME_FONT")
-fi
+typst_args=(resume.typ --font-path fonts --ignore-system-fonts)
 
 mkdir -p "$out_dir"
 
@@ -51,5 +49,16 @@ fi
 for version in "${versions[@]}"; do
   out=$(pdf_path "$version")
   echo "Building $out"
-  typst compile "${typst_args[@]}" --input "version=$version" "$out"
+  # Treat warnings (e.g. an unknown font) as errors so they can't slip into CI output.
+  if ! log=$(typst compile "${typst_args[@]}" --input "version=$version" "$out" 2>&1); then
+    echo "$log"
+    exit 1
+  fi
+  if [ -n "$log" ]; then
+    echo "$log"
+    if grep -q "^warning:" <<< "$log"; then
+      echo "error: warnings are treated as errors"
+      exit 1
+    fi
+  fi
 done

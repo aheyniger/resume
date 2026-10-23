@@ -27,10 +27,9 @@
 #let visible(items) = items.filter(included)
 
 // ---- Style knobs ----
-// Garamond ships with Windows/Office; CI has no copy and passes the free
-// EB Garamond instead via `--input font=...` (see build.sh).
-#let body-font = sys.inputs.at("font", default: "Garamond")
-#let body-size = 12pt
+// EB Garamond is kept in fonts/ so every machine renders the same PDF.
+#let body-font = "EB Garamond"
+#let body-size = 12.25pt // EB Garamond runs narrow; this matches Word's 12pt Garamond
 #let name-size = 28pt
 #let contact-size = 13pt
 #let rule-stroke = 0.75pt
@@ -40,7 +39,10 @@
 #set document(title: data.name + " Resume", author: data.name)
 #set page(paper: "us-letter", margin: (x: 0.6in, y: 0.4in))
 #set text(font: body-font, size: body-size, lang: "en")
-#set par(leading: 0.45em, spacing: 0.45em)
+#set par(leading: 0.42em, spacing: 0.42em)
+// EB Garamond's italic is wider than its roman; shrink it to keep the
+// compact italic lines of the original Word version.
+#show emph: set text(size: 0.91em)
 #set list(marker: [•], indent: 0.1in, body-indent: 0.15in, spacing: 0.45em)
 
 // ---- Helpers ----

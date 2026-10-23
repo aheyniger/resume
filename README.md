@@ -42,5 +42,6 @@ a permanent release, which is handy for recording what was sent where:
 git tag sent/spacex-2026-10 && git push origin sent/spacex-2026-10
 ```
 
-CI uses EB Garamond because Garamond is a Windows/Office font, so CI PDFs
-can differ slightly from local builds.
+Fonts (EB Garamond, SIL Open Font License) live in `fonts/`, and builds use only
+those, so local and CI PDFs are identical. VS Code's Tinymist preview is
+pointed there by `.vscode/settings.json`.
