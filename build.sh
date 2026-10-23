@@ -65,7 +65,8 @@ for version in "${versions[@]}"; do
   out=$(pdf_path "$version")
   echo "Building $out"
   # Treat warnings (e.g. an unknown font) as errors so they can't slip into CI output.
-  if ! log=$(typst compile "${typst_args[@]}" --input "version=$version" "$out" 2>&1); then
+  # strict=true makes going over a version's max-pages an error (see template.typ).
+  if ! log=$(typst compile "${typst_args[@]}" --input "version=$version" --input strict=true "$out" 2>&1); then
     echo "$log"
     exit 1
   fi

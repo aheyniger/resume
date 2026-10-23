@@ -19,6 +19,11 @@
 #let version = config.versions.at(version-name)
 #let version-topics = version.at("topics", default: "all")
 #let version-exclude = version.at("exclude", default: ())
+#let max-pages = version.at("max-pages", default: none)
+// build.sh passes strict=true for real builds, which turns going over
+// `max-pages` into an error. Previews and `--watch` leave it off and mark the
+// extra pages instead, so you can see what to cut.
+#let strict = sys.inputs.at("strict", default: "false") == "true"
 
 // An item is shown unless its `id` is in the version's `exclude` list, it has
 // `hide: true`, or it has `topics` and none of them are selected by the
@@ -56,7 +61,16 @@
 #let entry-gap = 6pt    // space between entries in a section
 
 #set document(title: data.name + " Resume", author: data.name)
-#set page(paper: "us-letter", margin: (x: 0.6in, y: 0.4in))
+#set page(
+  paper: "us-letter",
+  margin: (x: 0.6in, y: 0.4in),
+  // Pages past the version's `max-pages` get a red notice in the top margin.
+  background: context if max-pages != none and here().page() > max-pages {
+    place(top + center, dy: 0.12in, text(fill: red, size: 9pt, font: "EB Garamond", weight: "bold")[
+      Over the #max-pages\-page limit for version "#version-name"
+    ])
+  },
+)
 #set text(font: body-font, size: body-size, lang: "en")
 #set par(leading: 0.42em, spacing: 0.42em)
 // EB Garamond's italic is wider than its roman; shrink it to keep the
@@ -169,5 +183,16 @@
   if entries.len() > 0 {
     section-heading(section.title)
     for e in entries { entry(e) }
+  }
+}
+
+#if max-pages != none and strict {
+  context {
+    let pages = counter(page).final().first()
+    assert(
+      pages <= max-pages,
+      message: "version '" + version-name + "' is " + str(pages) + " pages, over its max-pages of " + str(max-pages)
+        + " (preview it with ./build.sh --watch " + version-name + " to see what spills over)",
+    )
   }
 }

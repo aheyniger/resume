@@ -173,7 +173,9 @@
 
   for (name, version) in config.versions.pairs() {
     let path = "versions > " + name
-    check-fields(file, path, version, ("topics", "exclude", "sections", "build", "publish"))
+    check-fields(file, path, version, ("topics", "exclude", "sections", "max-pages", "build", "publish"))
+    check-type(file, path, version, "max-pages", int, "a whole number")
+    if version.at("max-pages", default: 1) < 1 { fail(file, path, "'max-pages' must be at least 1") }
     check-type(file, path, version, "build", bool, "true or false")
     check-type(file, path, version, "publish", bool, "true or false")
     if version.at("build", default: true) == false and version.at("publish", default: false) == true {

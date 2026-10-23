@@ -11,6 +11,9 @@
 #             [interests]. Wins over everything else, even `topics: all`.
 #   sections  optional: section titles in the order to show them (others
 #             are dropped). Leave it out to use the order in content.yaml.
+#   max-pages optional: the most pages this version may take. Going over
+#             fails the build; `./build.sh --watch` and the VS Code preview
+#             instead mark the extra pages in red so you can see what to cut.
 #   publish   optional: set to false to keep this version off GitHub Pages.
 #             It's still built and checked locally and in CI.
 #   build     optional: set to false to set this version aside: it isn't
@@ -30,6 +33,7 @@ default: full
 versions:
   full:
     topics: all
+    max-pages: 2
 
   robotics:
     topics: [robotics, systems]

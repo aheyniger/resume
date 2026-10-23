@@ -40,6 +40,9 @@ Two more tools for tailoring (details in the comments at the top of each file):
   under a version's `exclude`, e.g. `exclude: [interests]`.
 - **Different wording:** give an item `variants`, wordings keyed by topic. A
   version uses the first one whose topic it selects, otherwise the plain `text`.
+- **Page limit:** give a version `max-pages: 1`. Going over fails the build;
+  `./build.sh --watch <version>` and the VS Code preview mark the extra pages
+  in red instead, so you can see what to cut.
 
 Misspelled field names, topics that don't appear anywhere in `content.yaml`, and
 unknown section names stop the build with a message saying where the problem is.
