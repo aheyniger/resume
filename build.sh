@@ -2,6 +2,7 @@
 # Builds resume PDFs into out/, named from versions.yaml.
 #
 #   ./build.sh                    build every version without `build: false`
+#   ./build.sh --all              build every version, including `build: false`
 #   ./build.sh robotics webdev    build just those versions
 #   ./build.sh --watch [version]  rebuild one version on every save
 #                                 (default: the default version)
@@ -19,7 +20,8 @@ config() { typst eval "yaml(\"versions.yaml\").$1" --format yaml; }
 
 filename=$(config filename)
 default=$(config default)
-all_versions=$(config 'versions.pairs().filter(((k, v)) => v.at("build", default: true)).map(((k, v)) => k).join(" ")')
+enabled_versions=$(config 'versions.pairs().filter(((k, v)) => v.at("build", default: true)).map(((k, v)) => k).join(" ")')
+all_versions=$(config 'versions.keys().join(" ")')
 
 pdf_path() {
   if [ "$1" = "$default" ]; then
@@ -38,12 +40,16 @@ if [ "${1:-}" = "--watch" ]; then
   exec typst watch "${typst_args[@]}" --input "version=$version" "$(pdf_path "$version")"
 fi
 
-if [ $# -gt 0 ]; then
-  versions=("$@")
-else
+if [ $# -eq 0 ] || [ "$1" = "--all" ]; then
   # Building everything: clear out PDFs from versions that no longer exist.
   rm -f "${out_dir:?}"/*.pdf
-  read -r -a versions <<< "$all_versions"
+  if [ $# -eq 0 ]; then
+    read -r -a versions <<< "$enabled_versions"
+  else
+    read -r -a versions <<< "$all_versions"
+  fi
+else
+  versions=("$@")
 fi
 
 for version in "${versions[@]}"; do

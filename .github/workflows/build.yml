@@ -3,16 +3,15 @@ name: Build resume
 on:
   push:
     branches: [main]
-    tags: ["*", "!latest"]
+    tags: ["*"]
   pull_request:
   workflow_dispatch:
-
-permissions:
-  contents: write # needed to create releases
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write # needed to create releases
     steps:
       - uses: actions/checkout@v4
 
@@ -21,8 +20,15 @@ jobs:
           typst-version: 0.15.1
 
       # Fonts come from fonts/ in the repo, so nothing needs installing.
+      # Tagged releases include `build: false` versions too, so a one-off
+      # version made for a specific application ends up in its release.
       - name: Build PDFs
-        run: bash build.sh
+        run: |
+          if [[ "$GITHUB_REF" == refs/tags/* ]]; then
+            bash build.sh --all
+          else
+            bash build.sh
+          fi
 
       # Downloadable from the run's summary page for 90 days.
       - uses: actions/upload-artifact@v4
@@ -30,28 +36,53 @@ jobs:
           name: resume-pdfs
           path: out/*.pdf
 
-      # Pushes to main replace the "latest" release, giving stable links like
-      # https://github.com/<user>/<repo>/releases/latest/download/aheyniger_resume.pdf
-      - name: Update "latest" release
+      # A plain index page so the site root lists the PDFs.
+      - name: Prepare Pages site
         if: github.ref == 'refs/heads/main'
-        env:
-          GH_TOKEN: ${{ github.token }}
         run: |
-          gh release delete latest --yes --cleanup-tag || true
-          gh release create latest out/*.pdf \
-            --title "Latest resume" \
-            --notes "Built from ${GITHUB_SHA::7}." \
-            --target "$GITHUB_SHA" \
-            --latest
+          {
+            echo '<!doctype html><meta charset="utf-8"><title>Resume</title>'
+            echo '<h1>Resume PDFs</h1><ul>'
+            for f in out/*.pdf; do
+              name=$(basename "$f")
+              echo "<li><a href=\"$name\">$name</a></li>"
+            done
+            echo "</ul><p>Built from ${GITHUB_SHA::7}.</p>"
+          } > out/index.html
 
-      # Pushing a git tag (e.g. `git tag sent/spacex-2026-10`) saves a
+      - uses: actions/upload-pages-artifact@v3
+        if: github.ref == 'refs/heads/main'
+        with:
+          path: out
+
+      # Pushing a git tag (e.g. `git tag -a applied/amazon-2026-10`) saves a
       # permanent release with the PDFs exactly as they were at that commit.
+      # The tag's message, if it has one, becomes the release notes.
       - name: Create tagged release
         if: startsWith(github.ref, 'refs/tags/')
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
+          git fetch --force origin "refs/tags/$GITHUB_REF_NAME:refs/tags/$GITHUB_REF_NAME"
+          notes=""
+          if [ "$(git cat-file -t "$GITHUB_REF_NAME")" = tag ]; then # annotated tag
+            notes=$(git tag -l --format='%(contents)' "$GITHUB_REF_NAME")
+          fi
           gh release create "$GITHUB_REF_NAME" out/*.pdf \
             --title "$GITHUB_REF_NAME" \
-            --notes "Resume as of tag $GITHUB_REF_NAME." \
-            --latest=false
+            --notes "${notes:-Resume as of tag $GITHUB_REF_NAME.}"
+
+  # Publishes the PDFs from main to https://<user>.github.io/<repo>/
+  deploy-pages:
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - id: deploy
+        uses: actions/deploy-pages@v4
