@@ -3,7 +3,7 @@ name: Build resume
 on:
   push:
     branches: [main]
-    tags: ["*"]
+    tags: ["**"] # `*` would not match the `/` in <version>/<label> tags
   pull_request:
   workflow_dispatch:
 
