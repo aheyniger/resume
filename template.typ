@@ -18,16 +18,32 @@
 )
 #let version = config.versions.at(version-name)
 #let version-topics = version.at("topics", default: "all")
+#let version-exclude = version.at("exclude", default: ())
 
-// An item is shown unless it has `hide: true`, or it has `topics` and none of
-// them are selected by the current version. Items without topics always show.
+// An item is shown unless its `id` is in the version's `exclude` list, it has
+// `hide: true`, or it has `topics` and none of them are selected by the
+// current version. Items without topics always show.
 #let included(it) = {
   if type(it) != dictionary { return true }
+  if it.at("id", default: none) in version-exclude { return false }
   if it.at("hide", default: false) { return false }
   let topics = it.at("topics", default: ())
   version-topics == "all" or topics.len() == 0 or topics.any(t => t in version-topics)
 }
 #let visible(items) = items.filter(included)
+
+// An item's text for this version: the first of its `variants` (in the order
+// written) whose topic the version selects, otherwise its plain `text`.
+// Versions with `topics: all` always get the plain text.
+#let text-of(item) = {
+  if type(item) == str { return item }
+  if version-topics != "all" {
+    for (topic, wording) in item.at("variants", default: (:)) {
+      if topic in version-topics { return wording }
+    }
+  }
+  item.at("text", default: "")
+}
 
 // ---- Style knobs ----
 // EB Garamond is kept in fonts/ so every machine renders the same PDF.
@@ -52,14 +68,14 @@
 
 // The visible items of a list (each a string or `{ text, topics }`), joined
 // with commas.
-#let join-items(items) = visible(items).map(i => if type(i) == str { i } else { i.text }).join(", ")
+#let join-items(items) = visible(items).map(text-of).join(", ")
 
 // A bold lead-in followed by plain text, or by a comma-separated list of
 // `items`. No space is added when the text starts with punctuation, so
 // "GPA: 3.68/4.0" + "; Dean's List" reads right.
 #let labeled(item) = {
   if type(item) == str { return item }
-  let text-part = item.at("text", default: "")
+  let text-part = text-of(item)
   if "items" in item { text-part = join-items(item.items) }
   let gap = if text-part.len() > 0 and text-part.first() in (";", ",", ".") { "" } else { " " }
   if "label" in item [*#item.label*#gap]
@@ -96,7 +112,7 @@
 #let contact-item(c) = {
   contact-icon
   h(0.3em)
-  if "link" in c { link(c.link, c.text) } else { c.text }
+  if "link" in c { link(c.link, text-of(c)) } else { text-of(c) }
 }
 
 #underlined({

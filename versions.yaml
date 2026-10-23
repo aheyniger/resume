@@ -6,6 +6,9 @@
 # Per version:
 #   topics    which items to include by topic: `all`, or a list of topics.
 #             Items with no `topics` in content.yaml are always included.
+#             Also picks which `variants` wording an item uses.
+#   exclude   optional: ids of items in content.yaml to leave out, e.g.
+#             [interests]. Wins over everything else, even `topics: all`.
 #   sections  optional: section titles in the order to show them (others
 #             are dropped). Leave it out to use the order in content.yaml.
 #   build     optional: set to false to skip this version when building

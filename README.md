@@ -34,6 +34,13 @@ in `content.yaml`. Items without topics appear everywhere; items with topics onl
 appear in versions whose `topics` in `versions.yaml` include one of them. To add
 a version, add an entry under `versions:` in `versions.yaml`.
 
+Two more tools for tailoring (details in the comments at the top of each file):
+
+- **Leaving things out:** give an item an `id` in `content.yaml`, then list it
+  under a version's `exclude`, e.g. `exclude: [interests]`.
+- **Different wording:** give an item `variants`, wordings keyed by topic. A
+  version uses the first one whose topic it selects, otherwise the plain `text`.
+
 Misspelled field names, topics that don't appear anywhere in `content.yaml`, and
 unknown section names stop the build with a message saying where the problem is.
 

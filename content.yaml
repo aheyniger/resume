@@ -9,6 +9,17 @@
 # it only appears in versions from versions.yaml that select one of its topics.
 # Anything without topics appears in every version.
 #
+# Give any of them an `id` (a short name you make up, used once) so a version
+# can leave it out with `exclude: [that-id]`.
+#
+# Anything with `text` can also have `variants`, other wordings by topic:
+#   text: Default wording
+#   variants:
+#     robotics: Wording for versions that select robotics
+#     webdev: Wording for versions that select webdev
+# A version uses the first variant (in the order written) whose topic it
+# selects, otherwise `text`. Versions with `topics: all` always use `text`.
+#
 # Entry fields (all optional). They say what something is; template.typ
 # decides how it looks:
 #   name      organization, school, or project name
@@ -241,4 +252,5 @@ sections:
           - label: "Other:"
             text: Agile/Scrum methodologies, Jira
           - label: "Interests:"
+            id: interests
             text: Speedcubing, trombone (11 years, section leader), game design, film
