@@ -16,6 +16,18 @@
 set -euo pipefail
 cd "$(dirname "$0")"
 
+# Layout can change between Typst releases, so every build uses the version in
+# .typst-version (CI reads the same file). Stop rather than warn: a warning is
+# easy to miss, and a mismatch means local PDFs may not match published ones.
+wanted_typst=$(tr -d '[:space:]' < .typst-version)
+local_typst=$(typst --version | awk '{print $2}')
+if [ "$local_typst" != "$wanted_typst" ]; then
+  echo "error: Typst $local_typst is installed, but .typst-version asks for $wanted_typst." >&2
+  echo "  To match it:            winget install --id Typst.Typst --version $wanted_typst" >&2
+  echo "  To upgrade on purpose:  put $local_typst in .typst-version and commit it, so CI switches too" >&2
+  exit 1
+fi
+
 out_dir=out
 
 # Read a value from versions.yaml using Typst itself, so no YAML tool is needed.

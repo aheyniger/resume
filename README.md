@@ -14,8 +14,14 @@ Built with [Typst](https://typst.app) from YAML data.
 | `template.typ` | Layout and styling, shared by every version |
 | `checks.typ` | Checks on the two YAML files, so typos stop the build instead of dropping text |
 | `build.sh` | Builds the PDFs into `out/` with the right names |
+| `.typst-version` | The Typst release every build uses, locally and in CI |
 
 ## Building
+
+Needs the Typst version in `.typst-version`; `build.sh` stops if yours differs,
+since layout can change between releases. To install that exact version:
+`winget install --id Typst.Typst --version <version>`. To upgrade, change the
+file and commit it; CI reads it too.
 
 Run from Git Bash (or `bash build.sh ...` from PowerShell):
 
@@ -85,4 +91,6 @@ locally.
 
 Fonts (EB Garamond, SIL Open Font License) live in `fonts/`, and builds use only
 those, so local and CI PDFs are identical. VS Code's Tinymist preview is
-pointed there by `.vscode/settings.json`.
+pointed there by `.vscode/settings.json`. Tinymist bundles its own Typst rather
+than the installed one, so `.typst-version` doesn't apply to the preview and it
+can occasionally lay out slightly differently; `build.sh` output is what counts.

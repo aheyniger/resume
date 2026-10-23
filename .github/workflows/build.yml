@@ -15,9 +15,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # The Typst version comes from .typst-version, the same file build.sh
+      # checks locally, so CI and local builds always use the same release.
+      - name: Read Typst version
+        id: typst-version
+        run: echo "version=$(tr -d '[:space:]' < .typst-version)" >> "$GITHUB_OUTPUT"
+
       - uses: typst-community/setup-typst@v4
         with:
-          typst-version: 0.15.1
+          typst-version: ${{ steps.typst-version.outputs.version }}
 
       # Fonts come from fonts/ in the repo, so nothing needs installing.
       # Tags are named <version>/<label> (e.g. amazon/2026-10-sde-intern) and
