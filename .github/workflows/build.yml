@@ -20,12 +20,16 @@ jobs:
           typst-version: 0.15.1
 
       # Fonts come from fonts/ in the repo, so nothing needs installing.
-      # Tagged releases include `build: false` versions too, so a one-off
-      # version made for a specific application ends up in its release.
+      # Tags are named <version>/<label> (e.g. amazon/2026-10-sde-intern) and
+      # build only that version, even one marked `build: false`.
       - name: Build PDFs
         run: |
           if [[ "$GITHUB_REF" == refs/tags/* ]]; then
-            bash build.sh --all
+            if [[ "$GITHUB_REF_NAME" != */* ]]; then
+              echo "error: tag '$GITHUB_REF_NAME' should look like <version>/<label>, e.g. amazon/2026-10-sde-intern"
+              exit 1
+            fi
+            bash build.sh "${GITHUB_REF_NAME%%/*}"
           else
             bash build.sh
           fi
@@ -55,20 +59,24 @@ jobs:
         with:
           path: out
 
-      # Pushing a git tag (e.g. `git tag -a applied/amazon-2026-10`) saves a
-      # permanent release with the PDFs exactly as they were at that commit.
+      # Pushing a tag saves a permanent release holding that one version as it
+      # was at the tagged commit, under the plain filename a recruiter sees.
       # The tag's message, if it has one, becomes the release notes.
       - name: Create tagged release
         if: startsWith(github.ref, 'refs/tags/')
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
+          filename=$(typst eval 'yaml("versions.yaml").filename' --format yaml)
+          mkdir -p out/release
+          cp out/*.pdf "out/release/$filename.pdf"
+
           git fetch --force origin "refs/tags/$GITHUB_REF_NAME:refs/tags/$GITHUB_REF_NAME"
           notes=""
           if [ "$(git cat-file -t "$GITHUB_REF_NAME")" = tag ]; then # annotated tag
             notes=$(git tag -l --format='%(contents)' "$GITHUB_REF_NAME")
           fi
-          gh release create "$GITHUB_REF_NAME" out/*.pdf \
+          gh release create "$GITHUB_REF_NAME" "out/release/$filename.pdf" \
             --title "$GITHUB_REF_NAME" \
             --notes "${notes:-Resume as of tag $GITHUB_REF_NAME.}"
 
