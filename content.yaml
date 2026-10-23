@@ -1,4 +1,5 @@
-# Resume data, rendered by template.typ.
+# Resume data, rendered by template.typ. Unknown field names stop the build
+# (see checks.typ), so the field list below is the complete set.
 #
 # Sections render in the order listed. Any section, entry, bullet, or list
 # item can be left out of the PDF by adding `hide: true` to it (plain-string

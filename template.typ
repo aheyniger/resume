@@ -3,8 +3,12 @@
 // Build with ./build.sh (see README), or directly:
 //   typst compile template.typ --input version=robotics
 
+#import "checks.typ": check-content, check-versions
+
 #let data = yaml("content.yaml")
 #let config = yaml("versions.yaml")
+#check-content(data)
+#check-versions(config, data)
 
 // ---- Version selection ----
 #let version-name = sys.inputs.at("version", default: config.default)
@@ -21,7 +25,6 @@
   if type(it) != dictionary { return true }
   if it.at("hide", default: false) { return false }
   let topics = it.at("topics", default: ())
-  if type(topics) == str { topics = (topics,) }
   version-topics == "all" or topics.len() == 0 or topics.any(t => t in version-topics)
 }
 #let visible(items) = items.filter(included)
@@ -128,14 +131,11 @@
   if bullets.len() > 0 { list(..bullets.map(labeled)) }
 })
 
-// A version can reorder or drop sections by listing their titles.
+// A version can reorder or drop sections by listing their titles (checked in
+// checks.typ). A listed section that's hidden or filtered out is skipped.
 #let sections = visible(data.sections)
 #if "sections" in version {
-  sections = version.sections.map(t => {
-    let found = sections.filter(s => s.title == t)
-    assert(found.len() > 0, message: "version '" + version-name + "' lists unknown section '" + t + "'")
-    found.first()
-  })
+  sections = version.sections.map(t => sections.find(s => s.title == t)).filter(s => s != none)
 }
 
 #for section in sections {

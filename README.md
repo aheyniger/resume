@@ -12,6 +12,7 @@ Built with [Typst](https://typst.app) from YAML data.
 | `content.yaml` | All resume content, with `topics` marking what's specific to a field |
 | `versions.yaml` | The output filename and the tailored versions, each a set of topics |
 | `template.typ` | Layout and styling, shared by every version |
+| `checks.typ` | Checks on the two YAML files, so typos stop the build instead of dropping text |
 | `build.sh` | Builds the PDFs into `out/` with the right names |
 
 ## Building
@@ -32,6 +33,9 @@ Add `topics: [robotics]` (any topic names) to an entry, bullet, course, or skill
 in `content.yaml`. Items without topics appear everywhere; items with topics only
 appear in versions whose `topics` in `versions.yaml` include one of them. To add
 a version, add an entry under `versions:` in `versions.yaml`.
+
+Misspelled field names, topics that don't appear anywhere in `content.yaml`, and
+unknown section names stop the build with a message saying where the problem is.
 
 ## Publishing
 
