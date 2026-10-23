@@ -9,9 +9,9 @@ Built with [Typst](https://typst.app) from YAML data.
 
 | File | What it holds |
 | --- | --- |
-| `resume-info.yaml` | All resume content, with `tags` marking what's specific to a field |
-| `versions.yaml` | The output filename and the tailored versions, each a set of tags |
-| `resume.typ` | Layout and styling, shared by every version |
+| `content.yaml` | All resume content, with `topics` marking what's specific to a field |
+| `versions.yaml` | The output filename and the tailored versions, each a set of topics |
+| `template.typ` | Layout and styling, shared by every version |
 | `build.sh` | Builds the PDFs into `out/` with the right names |
 
 ## Building
@@ -28,10 +28,10 @@ Run from Git Bash (or `bash build.sh ...` from PowerShell):
 
 ## Tailoring
 
-Add `tags: [robotics]` (any tag names) to an entry, bullet, course, or skill in
-`resume-info.yaml`. Untagged items appear everywhere; tagged items only appear
-in versions whose `tags` in `versions.yaml` include one of them. To add a
-version, add an entry under `versions:` in `versions.yaml`.
+Add `topics: [robotics]` (any topic names) to an entry, bullet, course, or skill
+in `content.yaml`. Items without topics appear everywhere; items with topics only
+appear in versions whose `topics` in `versions.yaml` include one of them. To add
+a version, add an entry under `versions:` in `versions.yaml`.
 
 ## Publishing
 

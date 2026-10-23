@@ -31,7 +31,7 @@ pdf_path() {
   fi
 }
 
-typst_args=(resume.typ --font-path fonts --ignore-system-fonts)
+typst_args=(template.typ --font-path fonts --ignore-system-fonts)
 
 mkdir -p "$out_dir"
 

@@ -1,12 +1,12 @@
-# Resume data, rendered by resume.typ.
+# Resume data, rendered by template.typ.
 #
 # Sections render in the order listed. Any section, entry, bullet, or list
 # item can be left out of the PDF by adding `hide: true` to it (plain-string
 # bullets need the `{ text: ..., hide: true }` form).
 #
-# Tailoring: give any of those a `tags` list (e.g. `tags: [robotics]`) and it
-# only appears in versions from versions.yaml that select one of its tags.
-# Anything without tags appears in every version.
+# Tailoring: give any of those a `topics` list (e.g. `topics: [robotics]`) and
+# it only appears in versions from versions.yaml that select one of its topics.
+# Anything without topics appears in every version.
 #
 # Entry fields (all optional except title):
 #   title          bold, left of the first line
@@ -19,7 +19,7 @@
 #   details        extra lines on their own, as `{ label, text }`
 #   bullets        strings, or `{ label, text }` for a bold lead-in, or
 #                  `{ label, items }` for a comma-separated list where each
-#                  item is a string or `{ text, tags }`
+#                  item is a string or `{ text, topics }`
 # An entry can have `roles` (a list of `{ subtitle, subtitle-right, subtitle-bold }`)
 # instead of a single subtitle, e.g. several degrees at one school.
 
@@ -52,20 +52,20 @@ sections:
             items:
               - Design & Analysis of Algorithms
               - Data Structures
-              - { text: Embedded Systems, tags: [robotics, systems] }
-              - { text: Database Systems & Applications, tags: [webdev] }
-              - { text: Web Systems Programming, tags: [webdev] }
-              - { text: Systems & Network Administration, tags: [systems, webdev] }
-              - { text: AI Game Programming, tags: [gamedev] }
-              - { text: Game Design Studio, tags: [gamedev] }
-              - { text: Foundations of Electrical Engineering, tags: [robotics] }
+              - { text: Embedded Systems, topics: [robotics, systems] }
+              - { text: Database Systems & Applications, topics: [webdev] }
+              - { text: Web Systems Programming, topics: [webdev] }
+              - { text: Systems & Network Administration, topics: [systems, webdev] }
+              - { text: AI Game Programming, topics: [gamedev] }
+              - { text: Game Design Studio, topics: [gamedev] }
+              - { text: Foundations of Electrical Engineering, topics: [robotics] }
               - Advanced Algorithms
               - Theory of Computation
-              - { text: Distributed Systems, tags: [systems, webdev] }
-              - { text: Software Performance Engineering, tags: [systems, gamedev] }
-              - { text: Mobile Robotics, tags: [robotics] }
-              - { text: Computer Graphics, tags: [gamedev] }
-              - { text: Operating System Design, tags: [systems] }
+              - { text: Distributed Systems, topics: [systems, webdev] }
+              - { text: Software Performance Engineering, topics: [systems, gamedev] }
+              - { text: Mobile Robotics, topics: [robotics] }
+              - { text: Computer Graphics, topics: [gamedev] }
+              - { text: Operating System Design, topics: [systems] }
 
   - title: Experience
     entries:
@@ -145,7 +145,7 @@ sections:
   - title: Projects
     entries:
       - title: Mars Rover (University Rover Challenge)
-        tags: [robotics]
+        topics: [robotics]
         right: C++, ROS2, Docker, Jetson, Raspberry Pi
         subtitle: >-
           Lead Software Engineer (April 2025 – March 2026) |
@@ -163,7 +163,7 @@ sections:
           - Onboarded and mentored new team members; assigned and guided development tasks
 
       - title: Miniature Driverless Car
-        tags: [robotics]
+        topics: [robotics]
         right: Python, ROS, Jetson, Azure Kinect DK
         subtitle: Software Engineer, Hardware Maintenance
         subtitle-right: Undergrad capstone, all of 2025
@@ -177,7 +177,7 @@ sections:
             calibration
 
       - title: Distributed Hash Table
-        tags: [systems, webdev]
+        topics: [systems, webdev]
         right: C++, Bash
         subtitle: Graduate course project
         subtitle-right: Jan 2026 – Present
@@ -193,7 +193,7 @@ sections:
             future
 
       - title: Full Stack Messaging App
-        tags: [webdev]
+        topics: [webdev]
         right: JavaScript, Java, React, Javalin, NodeJS, Maven, PostgreSQL
         subtitle: Team Lead, Full-stack Development
         subtitle-right: Undergrad course project, late 2024
@@ -221,22 +221,22 @@ sections:
               - JavaScript
               - Python
               - Bash
-              - { text: SQL, tags: [webdev] }
+              - { text: SQL, topics: [webdev] }
               - Rust
           - label: "Frameworks & Libraries:"
             items:
-              - { text: ROS2, tags: [robotics] }
-              - { text: React, tags: [webdev] }
+              - { text: ROS2, topics: [robotics] }
+              - { text: React, topics: [webdev] }
               - Boost
               - Android SDK
-              - { text: WebGL, tags: [webdev, gamedev] }
+              - { text: WebGL, topics: [webdev, gamedev] }
           - label: "Tools & Platforms:"
             items:
               - AWS (IoT Core, S3)
               - Docker
               - Git
               - Linux
-              - { text: Node.js, tags: [webdev] }
+              - { text: Node.js, topics: [webdev] }
           - label: "Other:"
             text: Agile/Scrum methodologies, Jira
           - label: "Interests:"

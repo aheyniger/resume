@@ -4,10 +4,10 @@
 # to <filename>_<version>.pdf.
 #
 # Per version:
-#   tags      which tagged items to include: `all`, or a list of tags.
-#             Items with no `tags` in resume-info.yaml are always included.
+#   topics    which items to include by topic: `all`, or a list of topics.
+#             Items with no `topics` in content.yaml are always included.
 #   sections  optional: section titles in the order to show them (others
-#             are dropped). Leave it out to use the order in resume-info.yaml.
+#             are dropped). Leave it out to use the order in content.yaml.
 #   build     optional: set to false to skip this version when building
 #             everything (CI included). `./build.sh <version>` still builds it.
 
@@ -16,13 +16,13 @@ default: full
 
 versions:
   full:
-    tags: all
+    topics: all
 
   robotics:
-    tags: [robotics, systems]
+    topics: [robotics, systems]
 
   webdev:
-    tags: [webdev]
+    topics: [webdev]
 
   gamedev:
-    tags: [gamedev]
+    topics: [gamedev]

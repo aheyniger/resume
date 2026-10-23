@@ -1,9 +1,9 @@
-// Resume layout. All content lives in resume-info.yaml and the list of
+// Resume layout. All content lives in content.yaml and the list of
 // tailored versions in versions.yaml; this file only controls how it looks.
 // Build with ./build.sh (see README), or directly:
-//   typst compile resume.typ --input version=robotics
+//   typst compile template.typ --input version=robotics
 
-#let data = yaml("resume-info.yaml")
+#let data = yaml("content.yaml")
 #let config = yaml("versions.yaml")
 
 // ---- Version selection ----
@@ -13,16 +13,16 @@
   message: "unknown version '" + version-name + "', expected one of: " + config.versions.keys().join(", "),
 )
 #let version = config.versions.at(version-name)
-#let version-tags = version.at("tags", default: "all")
+#let version-topics = version.at("topics", default: "all")
 
-// An item is shown unless it has `hide: true`, or it has `tags` and none of
-// them are selected by the current version. Untagged items always show.
+// An item is shown unless it has `hide: true`, or it has `topics` and none of
+// them are selected by the current version. Items without topics always show.
 #let included(it) = {
   if type(it) != dictionary { return true }
   if it.at("hide", default: false) { return false }
-  let tags = it.at("tags", default: ())
-  if type(tags) == str { tags = (tags,) }
-  version-tags == "all" or tags.len() == 0 or tags.any(t => t in version-tags)
+  let topics = it.at("topics", default: ())
+  if type(topics) == str { topics = (topics,) }
+  version-topics == "all" or topics.len() == 0 or topics.any(t => t in version-topics)
 }
 #let visible(items) = items.filter(included)
 
@@ -48,7 +48,7 @@
 // ---- Helpers ----
 
 // A bold lead-in followed by plain text, or by a comma-separated list of
-// `items` (each a string or `{ text, tags }`). No space is added when the
+// `items` (each a string or `{ text, topics }`). No space is added when the
 // text starts with punctuation, so "GPA: 3.68/4.0" + "; Dean's List" reads right.
 #let labeled(item) = {
   if type(item) == str { return item }
