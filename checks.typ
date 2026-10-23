@@ -173,8 +173,12 @@
 
   for (name, version) in config.versions.pairs() {
     let path = "versions > " + name
-    check-fields(file, path, version, ("topics", "exclude", "sections", "build"))
+    check-fields(file, path, version, ("topics", "exclude", "sections", "build", "publish"))
     check-type(file, path, version, "build", bool, "true or false")
+    check-type(file, path, version, "publish", bool, "true or false")
+    if version.at("build", default: true) == false and version.at("publish", default: false) == true {
+      fail(file, path, "has 'build: false' and 'publish: true'; a version that isn't built can't be published")
+    }
 
     check-list-of-strings(file, path, version, "exclude")
     for id in version.at("exclude", default: ()) {

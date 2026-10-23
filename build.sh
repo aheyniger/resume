@@ -6,6 +6,9 @@
 #   ./build.sh robotics webdev    build just those versions
 #   ./build.sh --watch [version]  rebuild one version on every save
 #                                 (default: the default version)
+#   ./build.sh --list-published   print the PDF paths of versions that get
+#                                 published (neither `build: false` nor
+#                                 `publish: false`), without building anything
 #
 # Only the fonts in fonts/ (plus Typst's built-in ones) are used, so builds
 # look identical on every machine and a missing font is an error, not a
@@ -21,6 +24,7 @@ config() { typst eval "yaml(\"versions.yaml\").$1" --format yaml; }
 filename=$(config filename)
 default=$(config default)
 enabled_versions=$(config 'versions.pairs().filter(((k, v)) => v.at("build", default: true)).map(((k, v)) => k).join(" ")')
+published_versions=$(config 'versions.pairs().filter(((k, v)) => v.at("build", default: true) and v.at("publish", default: true)).map(((k, v)) => k).join(" ")')
 all_versions=$(config 'versions.keys().join(" ")')
 
 pdf_path() {
@@ -30,6 +34,11 @@ pdf_path() {
     echo "$out_dir/${filename}_$1.pdf"
   fi
 }
+
+if [ "${1:-}" = "--list-published" ]; then
+  for version in $published_versions; do pdf_path "$version"; done
+  exit 0
+fi
 
 typst_args=(template.typ --font-path fonts --ignore-system-fonts)
 

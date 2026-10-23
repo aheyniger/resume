@@ -21,7 +21,9 @@ jobs:
 
       # Fonts come from fonts/ in the repo, so nothing needs installing.
       # Tags are named <version>/<label> (e.g. amazon/2026-10-sde-intern) and
-      # build only that version, even one marked `build: false`.
+      # build only that version, whatever its `build`/`publish` flags say.
+      # Everything else builds every version without `build: false`, which
+      # also checks they all compile; the next step picks which to publish.
       - name: Build PDFs
         run: |
           if [[ "$GITHUB_REF" == refs/tags/* ]]; then
@@ -34,30 +36,37 @@ jobs:
             bash build.sh
           fi
 
-      # Downloadable from the run's summary page for 90 days.
-      - uses: actions/upload-artifact@v4
-        with:
-          name: resume-pdfs
-          path: out/*.pdf
-
-      # A plain index page so the site root lists the PDFs.
-      - name: Prepare Pages site
-        if: github.ref == 'refs/heads/main'
+      # Only versions without `publish: false` leave the build machine: run
+      # artifacts on a public repo can be downloaded by anyone signed in to
+      # GitHub, so they come from site/ too, not out/. A plain index page lets
+      # the site root list the PDFs.
+      - name: Collect published PDFs
+        if: ${{ !startsWith(github.ref, 'refs/tags/') }}
         run: |
+          mkdir -p site
+          for f in $(bash build.sh --list-published); do cp "$f" site/; done
           {
             echo '<!doctype html><meta charset="utf-8"><title>Resume</title>'
             echo '<h1>Resume PDFs</h1><ul>'
-            for f in out/*.pdf; do
+            for f in site/*.pdf; do
               name=$(basename "$f")
               echo "<li><a href=\"$name\">$name</a></li>"
             done
             echo "</ul><p>Built from ${GITHUB_SHA::7}.</p>"
-          } > out/index.html
+          } > site/index.html
+
+      # Downloadable from the run's summary page for 90 days. Tag runs skip
+      # this; their release has the PDF.
+      - uses: actions/upload-artifact@v4
+        if: ${{ !startsWith(github.ref, 'refs/tags/') }}
+        with:
+          name: resume-pdfs
+          path: site/*.pdf
 
       - uses: actions/upload-pages-artifact@v3
         if: github.ref == 'refs/heads/main'
         with:
-          path: out
+          path: site
 
       # Pushing a tag saves a permanent release holding that one version as it
       # was at the tagged commit, under the plain filename a recruiter sees.

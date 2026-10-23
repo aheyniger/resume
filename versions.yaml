@@ -11,8 +11,18 @@
 #             [interests]. Wins over everything else, even `topics: all`.
 #   sections  optional: section titles in the order to show them (others
 #             are dropped). Leave it out to use the order in content.yaml.
-#   build     optional: set to false to skip this version when building
-#             everything (CI included). `./build.sh <version>` still builds it.
+#   publish   optional: set to false to keep this version off GitHub Pages.
+#             It's still built and checked locally and in CI.
+#   build     optional: set to false to set this version aside: it isn't
+#             built by `./build.sh` or checked in CI, and isn't published.
+#             `./build.sh --all` and `./build.sh <version>` still build it.
+#
+#                      ./build.sh   CI checks   Pages
+#   (neither)              yes         yes       yes
+#   publish: false         yes         yes       no
+#   build: false           no          no        no
+#
+# A tag release (see README) builds the version it names, whatever these say.
 
 filename: aheyniger_resume
 default: full
@@ -29,3 +39,4 @@ versions:
 
   gamedev:
     topics: [gamedev]
+    publish: false

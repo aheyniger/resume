@@ -46,9 +46,20 @@ unknown section names stop the build with a message saying where the problem is.
 
 ## Publishing
 
-GitHub Actions (`.github/workflows/build.yml`) runs on every push. Pushes to
-`main` publish the PDFs (minus `build: false` versions) to
+GitHub Actions (`.github/workflows/build.yml`) runs on every push to `main` and
+every pull request. It builds every version without `build: false`, so a broken
+version fails the run right away. Pushes to `main` then publish the versions
+that don't have `publish: false` to
 [GitHub Pages](https://aheyniger.github.io/resume/).
+
+| Version setting | `./build.sh` | CI checks | Pages |
+| --- | --- | --- | --- |
+| (neither) | yes | yes | yes |
+| `publish: false` (e.g. for one application) | yes | yes | no |
+| `build: false` (set aside for now) | no | no | no |
+
+`publish: false` PDFs never leave the build machine in CI: the run's
+downloadable artifact holds only the published ones too.
 
 ### Saving a release for an application
 
