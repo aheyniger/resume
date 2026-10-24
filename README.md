@@ -2,7 +2,7 @@
 
 Built with [Typst](https://typst.app) from YAML data.
 
-**Latest PDF:** [aheyniger_resume.pdf](https://aheyniger.github.io/resume/aheyniger_resume.pdf)
+**Latest PDF:** [Anders_Heyniger_Resume.pdf](https://aheyniger.github.io/resume/Anders_Heyniger_Resume.pdf)
 (tailored versions are listed at [aheyniger.github.io/resume](https://aheyniger.github.io/resume/)).
 
 ## Files
@@ -29,7 +29,7 @@ file and commit it; CI reads it too.
 Run from Git Bash (or `bash build.sh ...` from PowerShell):
 
 ```bash
-./build.sh                  # every version -> out/aheyniger_resume*.pdf
+./build.sh                  # every version -> out/Anders_Heyniger_Resume*.pdf
 ./build.sh --all            # including versions with `build: false`
 ./build.sh robotics         # just one version
 ./build.sh --watch          # rebuild the default version on every save
@@ -103,7 +103,7 @@ downloadable artifact holds only the published ones too.
 ### Saving a release for an application
 
 Pushing a git tag named `<version>/<label>` creates a permanent GitHub release
-holding just that version, as `aheyniger_resume.pdf`, exactly as it was at the
+holding just that version, as `Anders_Heyniger_Resume.pdf`, exactly as it was at the
 tagged commit. The tag's message (with `-a -m`) becomes the release notes. The
 version can be one marked `build: false`, so one-off versions stay off Pages.
 

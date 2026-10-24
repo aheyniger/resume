@@ -111,7 +111,7 @@ sections:
 
       - name: Structural Steel Technologies
         location: Nazareth, PA
-        role: Software Engineering Intern (sole developer on all projects)
+        role: Software Engineering Intern (sole developer)
         dates: June 2025 – Feb. 2026
         stack: [C++, Java, AWS IoT, Bash, Android, Ubuntu]
         bullets:
@@ -196,7 +196,7 @@ sections:
 
       - name: Distributed Hash Table
         note: (Graduate course project)
-        topics: [systems, webdev]
+        topics: [systems, webdev, course_project]
         dates: Jan 2026 – Present
         stack: [C++, Bash]
         bullets:
@@ -207,12 +207,13 @@ sections:
             active
           - >-
             Includes a Bash deployment script, custom configuration format, and
-            test client; extending with Paxos consensus and fault tolerance in
-            future
+            test client
+          - >-
+            Uses Paxos consensus for fault tolerance
 
       - name: Full Stack Messaging App
         note: (Undergrad course project)
-        topics: [webdev]
+        topics: [webdev, course_project]
         role: Team Lead, Full-stack Development
         dates: Late 2024
         stack: [JavaScript, Java, React, Javalin, NodeJS, Maven, PostgreSQL]
@@ -223,6 +224,7 @@ sections:
             the full stack
 
       - name: Simple Interpreted Language
+        topics: [course_project]
         stack: [Rust]
         bullets:
           - >-
@@ -260,4 +262,4 @@ sections:
             text: Agile/Scrum methodologies, Jira
           - label: "Interests:"
             id: interests
-            text: Speedcubing, trombone (11 years, section leader), game design, film
+            text: Film, game design, speedcubing, trombone (11 years, section leader)

@@ -27,13 +27,12 @@
 #
 # A tag release (see README) builds the version it names, whatever these say.
 
-filename: aheyniger_resume
+filename: Anders_Heyniger_Resume
 default: full
 
 versions:
   full:
     topics: all
-    max-pages: 2
 
   robotics:
     topics: [robotics, systems]
