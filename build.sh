@@ -10,6 +10,10 @@
 #                                 published (neither `build: false` nor
 #                                 `publish: false`), without building anything
 #
+# Add --private to any build or --watch to fill in the details from the
+# gitignored private.yaml (e.g. the phone number). Those PDFs go to
+# out/private/ instead, so they're never mixed up with the public ones.
+#
 # Only the fonts in fonts/ (plus Typst's built-in ones) are used, so builds
 # look identical on every machine and a missing font is an error, not a
 # silent substitution.
@@ -29,6 +33,23 @@ if [ "$local_typst" != "$wanted_typst" ]; then
 fi
 
 out_dir=out
+typst_args=(template.typ --font-path fonts --ignore-system-fonts)
+
+# --private can go anywhere in the arguments.
+args=()
+for arg in "$@"; do
+  if [ "$arg" = "--private" ]; then
+    if [ ! -f private.yaml ]; then
+      echo "error: --private needs private.yaml; copy private.example.yaml to private.yaml and fill it in" >&2
+      exit 1
+    fi
+    out_dir=out/private
+    typst_args+=(--input private=true)
+  else
+    args+=("$arg")
+  fi
+done
+set -- "${args[@]+"${args[@]}"}"
 
 # Read a value from versions.yaml using Typst itself, so no YAML tool is needed.
 config() { typst eval "yaml(\"versions.yaml\").$1" --format yaml; }
@@ -51,8 +72,6 @@ if [ "${1:-}" = "--list-published" ]; then
   for version in $published_versions; do pdf_path "$version"; done
   exit 0
 fi
-
-typst_args=(template.typ --font-path fonts --ignore-system-fonts)
 
 mkdir -p "$out_dir"
 

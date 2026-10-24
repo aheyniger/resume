@@ -12,6 +12,7 @@ Built with [Typst](https://typst.app) from YAML data.
 | `content.yaml` | All resume content, with `topics` marking what's specific to a field |
 | `versions.yaml` | The output filename and the tailored versions, each a set of topics |
 | `template.typ` | Layout and styling, shared by every version |
+| `private.example.yaml` | Stand-ins for private details; copy to `private.yaml` (gitignored) with the real ones |
 | `checks.typ` | Checks on the two YAML files, so typos stop the build instead of dropping text |
 | `build.sh` | Builds the PDFs into `out/` with the right names |
 | `.typst-version` | The Typst release every build uses, locally and in CI |
@@ -31,7 +32,19 @@ Run from Git Bash (or `bash build.sh ...` from PowerShell):
 ./build.sh robotics         # just one version
 ./build.sh --watch          # rebuild the default version on every save
 ./build.sh --watch webdev   # same, for one tailored version
+./build.sh --private        # with private details -> out/private/
 ```
+
+### Private details
+
+Details that shouldn't be in a public repo, like the phone number, live in
+`private.yaml`, which git ignores. In `content.yaml` the item is just
+`private: phone`, and its fields come from `private.yaml` under that key.
+`--private` builds (which work with `--watch` and version names too) fill
+them in; every other build, including CI, Pages, and tagged releases, leaves
+those items out. On a new machine, copy `private.example.yaml` to
+`private.yaml` and fill in the real values. Add each new key to both files;
+the example one is what CI checks against.
 
 ## Tailoring
 

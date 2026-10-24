@@ -1,5 +1,8 @@
 *.pdf
 
+# Real private details (see private.example.yaml).
+private.yaml
+
 # Build output: build.sh writes PDFs to out/, and CI collects the published
 # ones into site/ for GitHub Pages.
 out/

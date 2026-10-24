@@ -34,6 +34,10 @@
 #             `{ label, items }` for a comma-separated list where each
 #             item is a string or `{ text, topics }`
 #
+# Private details: an item can be just `private: <key>` (plus `hide`,
+# `topics`, `id`), and its fields come from private.yaml under that key. It
+# only appears in `./build.sh --private` builds, so it never reaches GitHub.
+#
 # Formatting in any text: *asterisks* make bold (write \* for a literal
 # asterisk), and straight quotes and apostrophes are curled automatically.
 # Quote a value that starts with *, since YAML reads a leading * as an alias:
@@ -44,8 +48,7 @@ name: Anders Heyniger
 contact:
   - text: anders.heyniger@gmail.com
     link: mailto:anders.heyniger@gmail.com
-  - text: XXX-XXX-XXXX
-    link: tel:+1XXX-XXX-XXXX
+  - private: phone # from private.yaml; only in ./build.sh --private builds
   - text: github.com/aheyniger
     link: https://github.com/aheyniger
   - text: linkedin.com/in/anders-heyniger

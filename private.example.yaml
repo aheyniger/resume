@@ -1,0 +1,11 @@
+# Details kept out of the public repo. Copy this file to private.yaml
+# (gitignored), fill in the real values, and build with ./build.sh --private.
+#
+# Each key matches a `private: <key>` in content.yaml. A value is the item's
+# text, or a set of its fields (e.g. text plus link). Every key used in
+# content.yaml must be here too, with a made-up value, so the checks in public
+# builds and CI can catch a missing one.
+
+phone:
+  text: (555) 555-0100
+  link: tel:+15555550100

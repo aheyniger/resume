@@ -44,8 +44,7 @@
 }
 
 // Checks an item's own fields plus the common ones and `variants`.
-#let check-item(path, obj, fields) = {
-  let file = "content.yaml"
+#let check-item(path, obj, fields, file: "content.yaml") = {
   check-fields(file, path, obj, fields + common-fields)
   check-type(file, path, obj, "hide", bool, "true or false")
   check-type(file, path, obj, "id", str, "a single word")
@@ -62,15 +61,48 @@
 }
 
 // A list of items, each plain text or `{ text, topics, hide, ... }`.
-#let check-items(path, items) = {
-  if type(items) != array { fail("content.yaml", path, "must be a list, got " + repr(items)) }
+#let check-items(path, items, file: "content.yaml") = {
+  if type(items) != array { fail(file, path, "must be a list, got " + repr(items)) }
   for (i, sub) in items.enumerate() {
     let sub-path = path + " > item " + str(i + 1)
     if type(sub) != str {
-      check-item(sub-path, sub, list-item-fields)
-      check-required("content.yaml", sub-path, sub, "text")
+      check-item(sub-path, sub, list-item-fields, file: file)
+      check-required(file, sub-path, sub, "text")
     }
   }
+}
+
+// Fills in items marked `private: <key>` from `values`, the contents of
+// `file` (private.yaml, or private.example.yaml for checking): a text value
+// becomes the item's `text`, and a set of fields is added to the item. With
+// `values: none`, those items are left out instead.
+#let fill-private(value, values, file) = {
+  if type(value) == array {
+    value
+      .filter(it => values != none or type(it) != dictionary or "private" not in it)
+      .map(it => fill-private(it, values, file))
+  } else if type(value) == dictionary {
+    let out = (:)
+    for (k, v) in value {
+      if k != "private" { out.insert(k, fill-private(v, values, file)) }
+    }
+    if "private" in value and values != none {
+      let key = value.private
+      if type(key) != str { fail("content.yaml", "private: " + repr(key), "must be a single word") }
+      if type(values) != dictionary or key not in values {
+        fail(file, "top level", "missing '" + key + "', which content.yaml uses as `private: " + key + "`")
+      }
+      let filled = values.at(key)
+      if type(filled) == str {
+        out.insert("text", filled)
+      } else if type(filled) == dictionary {
+        out += filled
+      } else {
+        fail(file, key, "must be text or a set of fields, got " + repr(filled))
+      }
+    }
+    out
+  } else { value }
 }
 
 // Everything `pick` returns for each set of fields anywhere inside `value`,
@@ -102,17 +134,18 @@
 }
 
 // A bullet: plain text, or a set of fields.
-#let check-labeled(path, item) = {
+#let check-labeled(path, item, file: "content.yaml") = {
   if type(item) == str { return }
-  check-item(path, item, labeled-fields)
+  check-item(path, item, labeled-fields, file: file)
   if "text" not in item and "items" not in item {
-    fail("content.yaml", path, "needs 'text' or 'items'")
+    fail(file, path, "needs 'text' or 'items'")
   }
-  if "items" in item { check-items(path, item.items) }
+  if "items" in item { check-items(path, item.items, file: file) }
 }
 
-#let check-content(data) = {
-  let file = "content.yaml"
+// `file` names the source in error messages; a --private build checks the
+// content again after filling in private.yaml.
+#let check-content(data, file: "content.yaml") = {
   check-fields(file, "top level", data, ("name", "contact", "sections"))
   check-required(file, "top level", data, "name")
   check-required(file, "top level", data, "sections")
@@ -121,19 +154,19 @@
   // from 1 otherwise, e.g. "Skills > entry 1 > bullet 2 > item 6".
   for (i, item) in data.at("contact", default: ()).enumerate() {
     let path = "contact " + str(i + 1)
-    check-item(path, item, contact-fields)
+    check-item(path, item, contact-fields, file: file)
     check-required(file, path, item, "text")
   }
 
   for (i, section) in data.sections.enumerate() {
     let path = section.at("title", default: "section " + str(i + 1))
-    check-item(path, section, ("title", "entries"))
+    check-item(path, section, ("title", "entries"), file: file)
     check-required(file, path, section, "title")
     check-required(file, path, section, "entries")
 
     for (j, entry) in section.entries.enumerate() {
       let entry-path = path + " > " + entry.at("name", default: "entry " + str(j + 1))
-      check-item(entry-path, entry, entry-fields)
+      check-item(entry-path, entry, entry-fields, file: file)
       if "roles" in entry {
         for key in ("role", "dates") {
           if key in entry {
@@ -143,12 +176,12 @@
       }
       for (k, role) in entry.at("roles", default: ()).enumerate() {
         let role-path = entry-path + " > role " + str(k + 1)
-        check-item(role-path, role, role-fields)
+        check-item(role-path, role, role-fields, file: file)
         check-required(file, role-path, role, "role")
       }
-      if "stack" in entry { check-items(entry-path + " > stack", entry.stack) }
+      if "stack" in entry { check-items(entry-path + " > stack", entry.stack, file: file) }
       for (k, item) in entry.at("bullets", default: ()).enumerate() {
-        check-labeled(entry-path + " > bullet " + str(k + 1), item)
+        check-labeled(entry-path + " > bullet " + str(k + 1), item, file: file)
       }
     }
   }

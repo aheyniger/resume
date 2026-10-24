@@ -4,12 +4,25 @@
 // the version to build, and strict page limits. Compiling this file directly
 // skips those, so use ./build.sh for any PDF you keep.
 
-#import "checks.typ": check-content, check-versions
+#import "checks.typ": check-content, check-versions, fill-private
 
-#let data = yaml("content.yaml")
 #let config = yaml("versions.yaml")
-#check-content(data)
-#check-versions(config, data)
+#let raw = yaml("content.yaml")
+
+// Items marked `private: <key>` get their fields from the gitignored
+// private.yaml in `./build.sh --private` builds and are left out of every
+// other build. The checks run on the content filled in from the committed
+// private.example.yaml, so even public builds catch a key missing from it.
+#let private = sys.inputs.at("private", default: "false") == "true"
+#let checked = fill-private(raw, yaml("private.example.yaml"), "private.example.yaml")
+#check-content(checked)
+#check-versions(config, checked)
+#let data = if private {
+  fill-private(raw, yaml("private.yaml"), "private.yaml")
+} else {
+  fill-private(raw, none, none)
+}
+#if private { check-content(data, file: "content.yaml + private.yaml") }
 
 // ---- Version selection ----
 #let version-name = sys.inputs.at("version", default: config.default)
