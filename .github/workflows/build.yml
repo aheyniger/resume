@@ -53,22 +53,11 @@ jobs:
 
       # Only versions without `publish: false` leave the build machine: run
       # artifacts on a public repo can be downloaded by anyone signed in to
-      # GitHub, so they come from site/ too, not out/. A plain index page lets
-      # the site root list the PDFs.
+      # GitHub, so they come from site/ too, not out/. make-site.sh also
+      # writes the index page from site-template.html.
       - name: Collect published PDFs
         if: ${{ !startsWith(github.ref, 'refs/tags/') }}
-        run: |
-          mkdir -p site
-          for f in $(bash build.sh --list-published); do cp "$f" site/; done
-          {
-            echo '<!doctype html><meta charset="utf-8"><title>Resume</title>'
-            echo '<h1>Resume PDFs</h1><ul>'
-            for f in site/*.pdf; do
-              name=$(basename "$f")
-              echo "<li><a href=\"$name\">$name</a></li>"
-            done
-            echo "</ul><p>Built from ${GITHUB_SHA::7}.</p>"
-          } > site/index.html
+        run: bash make-site.sh
 
       # Downloadable from the run's summary page for 90 days. Tag runs skip
       # this; their release has the PDF.

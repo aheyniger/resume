@@ -15,6 +15,7 @@ Built with [Typst](https://typst.app) from YAML data.
 | `private.example.yaml` | Stand-ins for private details; copy to `private.yaml` (gitignored) with the real ones |
 | `checks.typ` | Checks on the two YAML files, so typos stop the build instead of dropping text |
 | `check-text.sh` | Checks the PDFs read in order as plain text, as resume screeners see them |
+| `make-site.sh`, `site-template.html` | Build the GitHub Pages site: the published PDFs plus an index page |
 | `build.sh` | Builds the PDFs into `out/` with the right names |
 | `.typst-version` | The Typst release every build uses, locally and in CI |
 
@@ -80,7 +81,9 @@ order, the name is missing, or some text won't extract cleanly. To run it
 locally after a build: `./check-text.sh out/*.pdf` (Git Bash comes with a
 `pdftotext`, though a different one from CI's, so results can differ). Pushes to `main` then publish the versions
 that don't have `publish: false` to
-[GitHub Pages](https://aheyniger.github.io/resume/).
+[GitHub Pages](https://aheyniger.github.io/resume/), with an index page made
+from `site-template.html` (light and dark). To preview it, run `./build.sh`
+then `./make-site.sh` and open `site/index.html`.
 
 | Version setting | `./build.sh` | CI checks | Pages |
 | --- | --- | --- | --- |

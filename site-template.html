@@ -1,0 +1,87 @@
+<!doctype html>
+<!-- The GitHub Pages index, filled in by make-site.sh. {{...}} are replaced
+     with values; everything else is copied as is. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{name}} · Resume</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    color-scheme: light dark;
+    --bg: #fbfaf7;
+    --card: #ffffff;
+    --text: #1d1c1a;
+    --muted: #6b6760;
+    --rule: #dedad2;
+    --accent: #1f4e8c;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #161615;
+      --card: #1f1f1d;
+      --text: #ecebe7;
+      --muted: #a29e96;
+      --rule: #34332f;
+      --accent: #8db4ea;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font: 19px/1.5 "EB Garamond", Garamond, Georgia, serif;
+  }
+  main { max-width: 38rem; margin: 0 auto; padding: 3.5rem 1rem 2rem; }
+  h1 { font-size: 2.6rem; line-height: 1.1; margin: 0; }
+  .intro { color: var(--muted); margin: 0.4rem 0 2rem; }
+  h2 {
+    font-size: 1rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 0.2rem;
+    margin: 2rem 0 0.75rem;
+  }
+  ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.6rem; }
+  a { color: var(--accent); }
+  .pdf {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+    padding: 0.75rem 1rem;
+    background: var(--card);
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    text-decoration: none;
+    color: var(--text);
+  }
+  .pdf:hover, .pdf:focus-visible { border-color: var(--accent); }
+  .pdf strong { color: var(--accent); }
+  .pdf span { display: block; color: var(--muted); font-size: 0.85em; }
+  .size { color: var(--muted); font-size: 0.85em; white-space: nowrap; }
+  footer { color: var(--muted); font-size: 0.85em; margin-top: 2.5rem; }
+</style>
+</head>
+<body>
+<main>
+  <h1>{{name}}</h1>
+  <p class="intro">Resume PDFs, rebuilt from the
+    <a href="{{repo}}">source repository</a> on every change.</p>
+
+  <h2>Resume</h2>
+  <ul>
+{{main}}
+  </ul>
+
+{{tailored}}
+
+  <footer>Built from <a href="{{repo}}/commit/{{commit}}">{{short_commit}}</a> on {{date}}.</footer>
+</main>
+</body>
+</html>

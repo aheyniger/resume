@@ -6,9 +6,9 @@
 #   ./build.sh robotics webdev    build just those versions
 #   ./build.sh --watch [version]  rebuild one version on every save
 #                                 (default: the default version)
-#   ./build.sh --list-published   print the PDF paths of versions that get
-#                                 published (neither `build: false` nor
-#                                 `publish: false`), without building anything
+#   ./build.sh --list-published   print "<version> <pdf path>" for each version
+#                                 that gets published (neither `build: false`
+#                                 nor `publish: false`), without building
 #
 # Add --private to any build or --watch to fill in the details from the
 # gitignored private.yaml (e.g. the phone number). Those PDFs go to
@@ -69,7 +69,7 @@ pdf_path() {
 }
 
 if [ "${1:-}" = "--list-published" ]; then
-  for version in $published_versions; do pdf_path "$version"; done
+  for version in $published_versions; do echo "$version $(pdf_path "$version")"; done
   exit 0
 fi
 
