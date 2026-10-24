@@ -88,9 +88,13 @@ git push origin amazon/2026-10-sde-intern
 ```
 
 To tag an older commit, add its hash after the tag name. A plain `git push`
-doesn't push tags. To redo a release, delete the tag
-(`git tag -d <tag>` and `git push origin :refs/tags/<tag>`), then tag and push
-again; the new release replaces the old one. `git tag -l "amazon/*"` lists every release made from a
+doesn't push tags. To redo a release, move the tag and force-push it; the new
+release replaces the old one:
+
+```bash
+git tag -a -f amazon/2026-10-sde-intern -m "Amazon SDE Intern, Summer 2027"
+git push -f origin amazon/2026-10-sde-intern
+``` `git tag -l "amazon/*"` lists every release made from a
 version, and `git checkout <tag>` then `./build.sh <version>` rebuilds one
 locally.
 
