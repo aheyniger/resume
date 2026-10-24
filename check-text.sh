@@ -5,12 +5,17 @@
 #   ./check-text.sh out/*.pdf
 #
 # For each PDF it compares two extractions by pdftotext: the words in the
-# order Typst drew them (-raw), and the order pdftotext works out from the
-# layout, as a screener does. If they differ, something reads out of order,
-# e.g. a right-aligned date read into the wrong line. The contact header is
-# compared only as a set of words, since reading its grid across or down are
-# both fine. It also fails if the name is missing, or on characters that
-# appear when text doesn't extract cleanly (ligatures like "ﬁ", unknown glyphs).
+# order Typst drew them (-raw), and the lines pdftotext works out from the
+# layout, as a screener does. It fails if
+#   - a word is missing or extra, or
+#   - a line as read isn't an unbroken run of the drawn text, i.e. it mixes
+#     in words from elsewhere or splits a phrase, as when two columns are
+#     read across into one line.
+# Whole lines may move: some screeners read a stack of right-aligned dates
+# after the lines beside them, which is fine. The contact header is only
+# compared as a set of words, since its grid may be read across or down.
+# It also fails if the name is missing, or on characters that appear when
+# text doesn't extract cleanly (ligatures like "ﬁ", unknown glyphs).
 set -euo pipefail
 
 if [ $# -eq 0 ]; then
@@ -25,6 +30,9 @@ read -r -a headings <<< "$(typst eval 'yaml("content.yaml").sections.map(s => up
 
 # One word per line.
 words() { pdftotext -enc UTF-8 "$@" - | tr -s '[:space:]' '\n' | sed '/^$/d'; }
+
+# The text as laid out, one line per line with single spaces.
+lines() { pdftotext -enc UTF-8 "$1" - | tr -s ' \t\f\r' ' ' | sed 's/^ //; s/ $//; /^$/d'; }
 
 # The line number of the first section heading in a word list.
 header_end() {
@@ -45,6 +53,7 @@ failed=0
 for pdf in "$@"; do
   words -raw "$pdf" > "$scratch/drawn"
   words "$pdf" > "$scratch/read"
+  lines "$pdf" > "$scratch/lines"
   problems=()
 
   drawn_end=$(header_end < "$scratch/drawn")
@@ -53,10 +62,23 @@ for pdf in "$@"; do
                <(head -n "$((read_end - 1))" "$scratch/read" | sort) > /dev/null; then
     problems+=("the header's words differ between drawn and read order")
   fi
-  if ! body_diff=$(diff -U 3 --label "drawn order" --label "read order" \
-                     <(tail -n "+$drawn_end" "$scratch/drawn") \
-                     <(tail -n "+$read_end" "$scratch/read")); then
-    problems+=("reads out of order (one word per line; - drawn, + read; first 40 lines):"$'\n'"$(head -n 40 <<< "$body_diff")")
+  tail -n "+$drawn_end" "$scratch/drawn" > "$scratch/drawn-body"
+  if ! word_diff=$(diff -U 0 --label drawn --label read \
+                     <(sort "$scratch/drawn-body") <(tail -n "+$read_end" "$scratch/read" | sort)); then
+    problems+=("words missing (-) or extra (+) when read; first 40 lines:"$'\n'"$(head -n 40 <<< "$word_diff")")
+  fi
+
+  # Each line from the first section heading on must appear, as a whole, in
+  # the drawn text.
+  broken=$(awk -v headings="${headings[*]}" '
+    BEGIN { split(headings, h, " "); for (i in h) is_heading[h[i]] = 1 }
+    NR == FNR { drawn = drawn " " $0; next }
+    !in_body { split($0, w, " "); if (w[1] in is_heading) in_body = 1; else next }
+    index(drawn " ", " " $0 " ") == 0 { print "    " $0 }
+    END { if (!in_body) print "    (no section heading found, so nothing was checked)" }
+  ' "$scratch/drawn-body" "$scratch/lines")
+  if [ -n "$broken" ]; then
+    problems+=("lines that mix in words from elsewhere or split a phrase; first 20:"$'\n'"$(head -n 20 <<< "$broken")")
   fi
 
   if ! tr '\n' ' ' < "$scratch/read" | grep -qF "$name"; then

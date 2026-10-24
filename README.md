@@ -14,7 +14,7 @@ Built with [Typst](https://typst.app) from YAML data.
 | `template.typ` | Layout and styling, shared by every version |
 | `private.example.yaml` | Stand-ins for private details; copy to `private.yaml` (gitignored) with the real ones |
 | `checks.typ` | Checks on the two YAML files, so typos stop the build instead of dropping text |
-| `check-text.sh` | Checks the PDFs read in order as plain text, as resume screeners see them |
+| `check-text.sh` | Checks the PDFs' text comes out intact, as resume screeners read it |
 | `make-site.sh`, `site-template.html` | Build the GitHub Pages site: the published PDFs plus an index page |
 | `build.sh` | Builds the PDFs into `out/` with the right names |
 | `.typst-version` | The Typst release every build uses, locally and in CI |
@@ -76,11 +76,14 @@ unknown section names stop the build with a message saying where the problem is.
 GitHub Actions (`.github/workflows/build.yml`) runs on every push to `main` and
 every pull request. It builds every version without `build: false`, so a broken
 version fails the run right away, and runs `check-text.sh` on the PDFs: it
-extracts their text with `pdftotext` and fails if anything reads out of
-order, the name is missing, or some text won't extract cleanly. To run it
-locally after a build: `./check-text.sh out/*.pdf` (Git Bash comes with a
-`pdftotext`, though a different one from CI's, so results can differ). Pushes to `main` then publish the versions
-that don't have `publish: false` to
+extracts their text with `pdftotext` and fails if a word goes missing, a
+line gets mixed with words from elsewhere (e.g. two columns read across), the
+name is missing, or some text won't extract cleanly. Whole lines may move, as
+when a screener reads the right-aligned dates after the lines beside them. To
+run it locally after a build: `./check-text.sh out/*.pdf` (Git Bash comes
+with a `pdftotext`, though a different one from CI's, so results can differ).
+
+Pushes to `main` then publish the versions that don't have `publish: false` to
 [GitHub Pages](https://aheyniger.github.io/resume/), with an index page made
 from `site-template.html` (light and dark). To preview it, run `./build.sh`
 then `./make-site.sh` and open `site/index.html`.
