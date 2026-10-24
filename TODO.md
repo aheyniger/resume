@@ -1,0 +1,21 @@
+- Fix formatting
+    - remove double line at beginning
+    - potentially center name, links, and section titles
+    - consider changing format to be better
+        - more consistency between sections
+        - Display the stack better, dont use bold
+        - different colors
+- Fix comments throughout app
+- Fix readme
+- maybe either change default name to be my full name or add an option to change it
+- consider maybe a way to have different themes
+- is this system/workflow/whatever a good way to let ai modify and use my resume (for automated job applications)
+- a way to compress things into one page if possible (like a compressed theme/format)
+- recommend typemist extension if using vscode
+- instructions for installing fonts
+- second repo that is private to include private versions so i can download right from that. would likely work by having the public repo workflow build the private PDF and publish it over to the private repo. would need an access token as a secret for the workflow to write to another repo
+- some file committed to the repo to tell an llm how it works so it can work on the resume
+    - either in the same one or a different file should be instructions/rules on how the template is set up and stuff and what would be needed to create another template or theme that works
+    - also maybe separate instructions that are more to give an llm knowledge about what makes a resume good, both formatting wise and content wise, so it can give advice.
+- make this work on mac/linux, including better error messages and shit
+- make the GitHub Pages page differentiate tailored general versions and ones for specific companies
