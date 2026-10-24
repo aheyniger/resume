@@ -35,7 +35,10 @@ Run from Git Bash (or `bash build.sh ...` from PowerShell):
 ./build.sh --watch          # rebuild the default version on every save
 ./build.sh --watch webdev   # same, for one tailored version
 ./build.sh --private        # with private details -> out/private/
+./build.sh --include-system-fonts  # also allow fonts installed on this computer
 ```
+
+`--private` and `--include-system-fonts` work with any of the others.
 
 ### Private details
 
@@ -123,7 +126,9 @@ version, and `git checkout <tag>` then `./build.sh <version>` rebuilds one
 locally.
 
 Fonts (EB Garamond, SIL Open Font License) live in `fonts/`, and builds use only
-those, so local and CI PDFs are identical. VS Code's Tinymist preview is
+those, so local and CI PDFs are identical. To try a font installed on your
+computer, set `body-font` in `template.typ` and build with
+`--include-system-fonts`. To keep it, add its files to `fonts/` so CI has it too. VS Code's Tinymist preview is
 pointed there by `.vscode/settings.json`. Tinymist bundles its own Typst rather
 than the installed one, so `.typst-version` doesn't apply to the preview and it
 can occasionally lay out slightly differently; `build.sh` output is what counts.

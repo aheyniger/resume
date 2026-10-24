@@ -16,7 +16,9 @@
 #
 # Only the fonts in fonts/ (plus Typst's built-in ones) are used, so builds
 # look identical on every machine and a missing font is an error, not a
-# silent substitution.
+# silent substitution. To try a font installed on your computer, set it in
+# template.typ and add --include-system-fonts to any build or --watch; those
+# PDFs can look different elsewhere, so it's only for experimenting.
 set -euo pipefail
 cd "$(dirname "$0")"
 
@@ -33,12 +35,15 @@ if [ "$local_typst" != "$wanted_typst" ]; then
 fi
 
 out_dir=out
-typst_args=(template.typ --font-path fonts --ignore-system-fonts)
+typst_args=(template.typ --font-path fonts)
+system_fonts=false
 
-# --private can go anywhere in the arguments.
+# --private and --include-system-fonts can go anywhere in the arguments.
 args=()
 for arg in "$@"; do
-  if [ "$arg" = "--private" ]; then
+  if [ "$arg" = "--include-system-fonts" ]; then
+    system_fonts=true
+  elif [ "$arg" = "--private" ]; then
     if [ ! -f private.yaml ]; then
       echo "error: --private needs private.yaml; copy private.example.yaml to private.yaml and fill it in" >&2
       exit 1
@@ -50,6 +55,11 @@ for arg in "$@"; do
   fi
 done
 set -- "${args[@]+"${args[@]}"}"
+if [ "$system_fonts" = true ]; then
+  echo "note: using fonts installed on this computer too; these PDFs may not match CI's" >&2
+else
+  typst_args+=(--ignore-system-fonts)
+fi
 
 # Read a value from versions.yaml using Typst itself, so no YAML tool is needed.
 config() { typst eval "yaml(\"versions.yaml\").$1" --format yaml; }
