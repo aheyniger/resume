@@ -69,7 +69,7 @@
 #let body-font = "EB Garamond"
 #let body-size = 12.25pt // EB Garamond runs narrow; this matches Word's 12pt Garamond
 #let name-size = 28pt
-#let contact-size = 13pt
+#let contact-size = body-size // shrinks to fit if the contact line is ever too wide
 #let rule-stroke = 0.75pt
 #let line-gap = 0.42em  // space between lines and between bullets
 #let section-gap = 12pt // space above each section heading
@@ -150,32 +150,28 @@
 )
 
 // ---- Header ----
-// A ❖ drawn from four small diamonds, so it doesn't depend on a symbol font.
-#let contact-icon = {
-  let d = 0.27em
-  let diamond = polygon(fill: black, (d / 2, 0pt), (d, d / 2), (d / 2, d), (0pt, d / 2))
-  box(width: 2 * d + 0.06em, height: 2 * d + 0.06em, baseline: 0.05em, {
-    place(dx: d / 2 + 0.03em, dy: 0pt, diamond)
-    place(dx: 0pt, dy: d / 2 + 0.03em, diamond)
-    place(dx: d + 0.06em, dy: d / 2 + 0.03em, diamond)
-    place(dx: d / 2 + 0.03em, dy: d + 0.06em, diamond)
-  })
-}
+// The name, then every contact on one line separated by bars, all centered.
 #let contact-item(c) = {
-  contact-icon
-  h(0.3em)
-  if "link" in c { link(c.link, rich(text-of(c))) } else { rich(text-of(c)) }
+  let body = rich(text-of(c))
+  if "link" in c { link(c.link, body) } else { body }
 }
+#let contact-line(size) = text(
+  size: size,
+  visible(data.contact).map(contact-item).join[#h(0.55em)|#h(0.55em)],
+)
 
-#underlined({
+#underlined(align(center, {
   text(size: name-size, weight: "bold", data.name)
-  v(-4pt)
-  text(size: contact-size, grid(
-    columns: (3.1875in, 1fr),
-    row-gutter: 0.45em,
-    ..visible(data.contact).map(contact-item),
-  ))
-})
+  v(-3pt)
+  // One line always: if the contacts are ever too wide for the page, they
+  // shrink just enough to fit instead of wrapping. The padding keeps letters
+  // like g and y clear of the rule below.
+  pad(bottom: 2pt, layout(region => {
+    let width = measure(contact-line(contact-size)).width
+    let size = if width <= region.width { contact-size } else { contact-size * (region.width / width) * 0.99 }
+    contact-line(size)
+  }))
+}))
 
 // ---- Body ----
 #let section-heading(title) = {
