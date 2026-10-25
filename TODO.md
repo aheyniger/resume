@@ -1,28 +1,32 @@
-- Fix formatting
-    - remove double line at beginning
-    - potentially center name, links, and section titles
-    - consider changing format to be better
-        - more consistency between sections
-        - Display the stack better, dont use bold
-        - different colors
-- Fix comments throughout app
-- Fix readme
-- maybe either change default name to be my full name or add an option to change it
-- consider maybe a way to have different themes
-- is this system/workflow/whatever a good way to let ai modify and use my resume (for automated job applications)
+# Things to work on, add, tweak, or fix later
+## Formatting
+- Remove/fix double line at beginning both before and after Education
+- consider centering section titles (prob not tho)
+- consider adding more color
+- move gpa next to degrees, remove deans list and honor society
+- make words smaller so i can fit more in (make sure its still readable)
+
+## New Features
+- Different themes or layout options?
 - a way to compress things into one page if possible (like a compressed theme/format)
-- recommend typemist extension if using vscode
-- instructions for installing fonts
 - second repo that is private to include private versions so i can download right from that. would likely work by having the public repo workflow build the private PDF and publish it over to the private repo. would need an access token as a secret for the workflow to write to another repo
-- some file committed to the repo to tell an llm how it works so it can work on the resume
-    - either in the same one or a different file should be instructions/rules on how the template is set up and stuff and what would be needed to create another template or theme that works
-    - also maybe separate instructions that are more to give an llm knowledge about what makes a resume good, both formatting wise and content wise, so it can give advice.
-- make this work on mac/linux, including better error messages and shit
-- make the GitHub Pages page differentiate tailored general versions and ones for specific companies
 - script to act as a helper for many things, like maybe one that can list all topics
 - a way to add things like concise variants for both specific bullet points and for entire entries
-- move gpa next to degrees, remote deans list and honor society
-- make words smaller so i can fit more in (make sure its still readable)
-- ask claude about more topics to add for what i have
 - add some way/option of putting stack/tech on the name line, right after the project/company name separated by a |, to save space (but prefer separate stack line)
+
+## Changes
+- recommend typemist extension in README if using vscode
+- instructions for installing fonts in README
+- make the GitHub Pages page differentiate tailored general versions and ones for specific companies
 - add comments as personal notes to content.yaml to do things like give a full summary/description/explanation/rundown of a job/project and things to remember when considering or updating it
+
+## Fixes
+- Fix/redo comments throughout app
+    - make sure to make them more frequent in places like layout.typ which really requires everything to be explained
+- Fix/redo readme
+- make this work on mac/linux, including better error messages and shit
+    - one example is how we specifically refer to winget for typst version and shit
+
+## Stuff to check
+- is this system/workflow/whatever a good way to let ai modify and use my resume (for automated job applications)
+- ask claude about more topics to add for what i have
