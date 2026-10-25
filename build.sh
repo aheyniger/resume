@@ -17,7 +17,7 @@
 # Only the fonts in fonts/ (plus Typst's built-in ones) are used, so builds
 # look identical on every machine and a missing font is an error, not a
 # silent substitution. To try a font installed on your computer, set it in
-# template.typ and add --include-system-fonts to any build or --watch; those
+# layout.typ and add --include-system-fonts to any build or --watch; those
 # PDFs can look different elsewhere, so it's only for experimenting.
 set -euo pipefail
 cd "$(dirname "$0")"
@@ -35,7 +35,7 @@ if [ "$local_typst" != "$wanted_typst" ]; then
 fi
 
 out_dir=out
-typst_args=(template.typ --font-path fonts)
+typst_args=(layout.typ --font-path fonts)
 system_fonts=false
 
 # --private and --include-system-fonts can go anywhere in the arguments.
@@ -106,7 +106,7 @@ for version in "${versions[@]}"; do
   out=$(pdf_path "$version")
   echo "Building $out"
   # Treat warnings (e.g. an unknown font) as errors so they can't slip into CI output.
-  # strict=true makes going over a version's max-pages an error (see template.typ).
+  # strict=true makes going over a version's max-pages an error (see layout.typ).
   if ! log=$(typst compile "${typst_args[@]}" --input "version=$version" --input strict=true "$out" 2>&1); then
     echo "$log"
     exit 1

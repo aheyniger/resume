@@ -11,7 +11,7 @@ Built with [Typst](https://typst.app) from YAML data.
 | --- | --- |
 | `content.yaml` | All resume content, with `topics` marking what's specific to a field |
 | `versions.yaml` | The output filename and the tailored versions, each a set of topics |
-| `template.typ` | Layout and styling, shared by every version |
+| `layout.typ` | Layout and styling, shared by every version |
 | `private.example.yaml` | Stand-ins for private details; copy to `private.yaml` (gitignored) with the real ones |
 | `checks.typ` | Checks on the two YAML files, so typos stop the build instead of dropping text |
 | `check-text.sh` | Checks the PDFs' text comes out intact, as resume screeners read it |
@@ -127,7 +127,7 @@ locally.
 
 Fonts (EB Garamond, SIL Open Font License) live in `fonts/`, and builds use only
 those, so local and CI PDFs are identical. To try a font installed on your
-computer, set `body-font` in `template.typ` and build with
+computer, set `body-font` in `layout.typ` and build with
 `--include-system-fonts`. To keep it, add its files to `fonts/` so CI has it too. VS Code's Tinymist preview is
 pointed there by `.vscode/settings.json`. Tinymist bundles its own Typst rather
 than the installed one, so `.typst-version` doesn't apply to the preview and it

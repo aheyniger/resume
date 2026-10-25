@@ -1,4 +1,4 @@
-# Resume data, rendered by template.typ. Unknown field names stop the build
+# Resume data, rendered by layout.typ. Unknown field names stop the build
 # (see checks.typ), so the field list below is the complete set.
 #
 # Sections render in the order listed. Any section, entry, bullet, or list
@@ -20,7 +20,7 @@
 # A version uses the first variant (in the order written) whose topic it
 # selects, otherwise `text`. Versions with `topics: all` always use `text`.
 #
-# Entry fields (all optional). They say what something is; template.typ
+# Entry fields (all optional). They say what something is; layout.typ
 # decides how it looks:
 #   name      organization, school, or project name
 #   note      short aside after the name, e.g. "(Graduate course project)"

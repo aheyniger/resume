@@ -1,4 +1,4 @@
-// Checks on content.yaml and versions.yaml, run by template.typ before
+// Checks on content.yaml and versions.yaml, run by layout.typ before
 // rendering. Without these, a misspelled field or topic would silently drop
 // text from the PDF; with them the build stops and says where the problem is.
 
