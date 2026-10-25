@@ -171,7 +171,7 @@ sections:
               - { text: Computer Graphics, topics: [gamedev] }
               - { text: Operating System Design, topics: [systems] }
               - { text: Parallel Computing, topics: [systems] }
-              
+
 # ================================================================
 # -------------------------- PROJECTS ----------------------------
 # ================================================================
@@ -254,7 +254,7 @@ sections:
 # ================================================================
 # --------------------------- SKILLS -----------------------------
 # ================================================================
-  - title: Skills
+  - title: Skills & Interests
     entries:
       - bullets:
           - label: "Languages:"
