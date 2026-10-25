@@ -61,15 +61,15 @@ sections:
         location: Bethlehem, PA
         roles:
           - role: M.S. in Computer Science
-            dates: "Expected graduation: Dec. 2026"
+            dates: "Dec. 2026"
           - role: B.S. in Computer Science and Engineering, Minor in Music
-            dates: Aug. 2022 – Dec. 2025
+            dates: Dec. 2025
         bullets:
           - "*GPA: 3.68/4.0*; Dean’s List; Upsilon Pi Epsilon Honor Society"
           - label: "Relevant Courses:"
             items:
-              - Design & Analysis of Algorithms
-              - Data Structures
+              # - Design & Analysis of Algorithms
+              # - Data Structures
               - { text: Embedded Systems, topics: [robotics, systems] }
               - { text: Database Systems & Applications, topics: [webdev] }
               - { text: Web Systems Programming, topics: [webdev] }
@@ -88,7 +88,7 @@ sections:
   - title: Experience
     entries:
       - name: SpaceX (Space Exploration Technologies Corp)
-        note: (NDA-Protected)
+        # note: (NDA-Protected)
         location: Hawthorne, CA
         role: Dragon Flight Software, Software Engineering Intern
         dates: June 2026 – Aug. 2026
@@ -104,10 +104,10 @@ sections:
           - >-
             Extended existing continuous integration/testing pipelines with new
             hardware calibration checks
-          - >-
-            Collaborated with a fast-paced engineering team to deliver
-            safety-critical software for human spaceflight, working within
-            strict reliability and correctness standards
+          # - >-
+          #   Collaborated with a fast-paced engineering team to deliver
+          #   safety-critical software for human spaceflight, working within
+          #   strict reliability and correctness standards
 
       - name: Structural Steel Technologies
         location: Nazareth, PA
@@ -144,9 +144,9 @@ sections:
         location: Bethlehem, PA
         roles:
           - role: Head Teaching Assistant
-            dates: Aug 2024 – June 2025
+            dates: Aug. 2024 – June 2025
           - role: Teaching Assistant
-            dates: Aug 2023 – Jul 2024
+            dates: Aug. 2023 – July 2024
         bullets:
           - >-
             Supported 300+ students/semester in Python programming, hardware
@@ -165,12 +165,11 @@ sections:
           - role: Lead Software Engineer
             dates: April 2025 – March 2026
           - role: Software Engineer
-            dates: Jan 2025 – April 2025
+            dates: Jan. 2025 – April 2025
         stack: [C++, ROS2, Docker, Jetson, Raspberry Pi]
         bullets:
           - >-
-            Lead software engineer on a university competition rover;
-            redesigned the drive system to support a new CAN-bus motor
+            Redesigned the drive system to support a new CAN-bus motor
             architecture via Raspberry Pi
           - >-
             Built a ROS2 hardware plugin (ros2_control), PWM reader for motor
@@ -197,7 +196,7 @@ sections:
       - name: Distributed Hash Table
         note: (Graduate course project)
         topics: [systems, webdev, course_project]
-        dates: Jan 2026 – Present
+        dates: Jan. 2026 – May 2026
         stack: [C++, Bash]
         bullets:
           - >-
@@ -262,4 +261,4 @@ sections:
             text: Agile/Scrum methodologies, Jira
           - label: "Interests:"
             id: interests
-            text: Film, game design, speedcubing, trombone (11 years, section leader)
+            text: Film, game design, speedcubing (25sec avg), trombone (11 years, section leader)

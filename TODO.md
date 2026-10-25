@@ -19,3 +19,7 @@
     - also maybe separate instructions that are more to give an llm knowledge about what makes a resume good, both formatting wise and content wise, so it can give advice.
 - make this work on mac/linux, including better error messages and shit
 - make the GitHub Pages page differentiate tailored general versions and ones for specific companies
+- script to act as a helper for many things, like maybe one that can list all topics
+- a way to add things like concise variants for both specific bullet points and for entire entries
+- move gpa next to degrees, remote deans list and honor society
+- make words smaller so i can fit more in (make sure its still readable)
