@@ -121,9 +121,10 @@ release replaces the old one:
 ```bash
 git tag -a -f amazon/2026-10-sde-intern -m "Amazon SDE Intern, Summer 2027"
 git push -f origin amazon/2026-10-sde-intern
-``` `git tag -l "amazon/*"` lists every release made from a
-version, and `git checkout <tag>` then `./build.sh <version>` rebuilds one
-locally.
+```
+
+`git tag -l "amazon/*"` lists every release made from a version, and
+`git checkout <tag>` then `./build.sh <version>` rebuilds one locally.
 
 Fonts (EB Garamond, SIL Open Font License) live in `fonts/`, and builds use only
 those, so local and CI PDFs are identical. To try a font installed on your

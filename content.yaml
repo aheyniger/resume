@@ -200,7 +200,7 @@ sections:
         note: (Undergrad capstone)
         topics: [robotics]
         role: Software Engineer, Hardware Maintenance
-        dates: Jan. 2025 - Dec. 2025
+        dates: Jan. 2025 – Dec. 2025
         stack: [Python, ROS, Jetson, Azure Kinect DK]
         bullets:
           - >-
