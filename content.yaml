@@ -209,7 +209,7 @@ sections:
             Includes a Bash deployment script, custom configuration format, and
             test client
           - >-
-            Uses Paxos consensus for fault tolerance
+            Added Paxos consensus for fault tolerance
 
       - name: Full Stack Messaging App
         note: (Undergrad course project)
