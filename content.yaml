@@ -61,7 +61,7 @@ sections:
         location: Bethlehem, PA
         roles:
           - role: M.S. in Computer Science
-            dates: "Dec. 2026"
+            dates: Dec. 2026
           - role: B.S. in Computer Science and Engineering, Minor in Music
             dates: Dec. 2025
         bullets:
@@ -182,7 +182,7 @@ sections:
         note: (Undergrad capstone)
         topics: [robotics]
         role: Software Engineer, Hardware Maintenance
-        dates: "2025"
+        dates: Jan. 2025 - Dec. 2025
         stack: [Python, ROS, Jetson, Azure Kinect DK]
         bullets:
           - >-
@@ -214,7 +214,7 @@ sections:
         note: (Undergrad course project)
         topics: [webdev, course_project]
         role: Team Lead, Full-stack Development
-        dates: Late 2024
+        dates: Fall 2024
         stack: [JavaScript, Java, React, Javalin, NodeJS, Maven, PostgreSQL]
         bullets:
           - >-
@@ -225,6 +225,7 @@ sections:
       - name: Simple Interpreted Language
         topics: [course_project]
         stack: [Rust]
+        dates: Fall 2023
         bullets:
           - >-
             Designed and implemented a Turing-complete interpreted language
