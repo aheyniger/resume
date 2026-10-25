@@ -13,6 +13,8 @@
 - script to act as a helper for many things, like maybe one that can list all topics
 - a way to add things like concise variants for both specific bullet points and for entire entries
 - add some way/option of putting stack/tech on the name line, right after the project/company name separated by a |, to save space (but prefer separate stack line)
+- maybe a periodic auto-release to kind of just snapshot my resume over time more generally
+    - only do the periodic release when stuff has also actually changed. like, if it is run every month, then only release it in the months where there's changes, so that you dont just not make any changes for 7 months but still have like 7 auto-releases
 
 ## Changes
 - recommend typemist extension in README if using vscode
