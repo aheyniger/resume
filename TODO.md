@@ -21,6 +21,7 @@
 - instructions for installing fonts in README
 - make the GitHub Pages page differentiate tailored general versions and ones for specific companies
 - add comments as personal notes to content.yaml to do things like give a full summary/description/explanation/rundown of a job/project and things to remember when considering or updating it
+- split CLAUDE.md into a "How to use the tool" section that explains this whole resume tool i have, and then a "How to do the resume" section that is for specific things to the resume itself, like how to abbreviate months, or how many items can be in a stack line, or to make sure to use official spellings for tools in the stack
 
 ## Fixes
 - Fix/redo comments throughout app
@@ -32,3 +33,4 @@
 ## Stuff to check
 - is this system/workflow/whatever a good way to let ai modify and use my resume (for automated job applications)
 - ask claude about more topics to add for what i have
+- review CLAUDE.md
