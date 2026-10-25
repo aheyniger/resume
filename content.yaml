@@ -87,7 +87,8 @@ sections:
 
   - title: Experience
     entries:
-      - name: SpaceX (Space Exploration Technologies Corp)
+      # - name: SpaceX (Space Exploration Technologies Corp)
+      - name: SpaceX
         # note: (NDA-Protected)
         location: Hawthorne, CA
         role: Dragon Flight Software, Software Engineering Intern
