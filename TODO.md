@@ -23,3 +23,6 @@
 - a way to add things like concise variants for both specific bullet points and for entire entries
 - move gpa next to degrees, remote deans list and honor society
 - make words smaller so i can fit more in (make sure its still readable)
+- ask claude about more topics to add for what i have
+- add some way/option of putting stack/tech on the name line, right after the project/company name separated by a |, to save space (but prefer separate stack line)
+- add comments as personal notes to content.yaml to do things like give a full summary/description/explanation/rundown of a job/project and things to remember when considering or updating it

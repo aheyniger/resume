@@ -43,6 +43,9 @@
 # Quote a value that starts with *, since YAML reads a leading * as an alias:
 #   - "*GPA: 3.68/4.0*; Dean’s List"
 
+# ================================================================
+# ---------------------------- HEADER ----------------------------
+# ================================================================
 name: Anders Heyniger
 
 contact:
@@ -55,6 +58,9 @@ contact:
     link: https://linkedin.com/in/anders-heyniger
 
 sections:
+# ================================================================
+# -------------------------- EDUCATION ---------------------------
+# ================================================================
   - title: Education
     entries:
       - name: Lehigh University
@@ -76,15 +82,21 @@ sections:
               - { text: Systems & Network Administration, topics: [systems, webdev] }
               - { text: AI Game Programming, topics: [gamedev] }
               - { text: Game Design Studio, topics: [gamedev] }
+              - { text: Reinforcement Learning, topics: [ai, ml, systems, gamedev] }
               - { text: Foundations of Electrical Engineering, topics: [robotics] }
               - Advanced Algorithms
               - Theory of Computation
+              # - { text: Advanced Software Engineering, topics: [] }
               - { text: Distributed Systems, topics: [systems, webdev] }
               - { text: Software Performance Engineering, topics: [systems, gamedev] }
               - { text: Mobile Robotics, topics: [robotics] }
               - { text: Computer Graphics, topics: [gamedev] }
               - { text: Operating System Design, topics: [systems] }
+              - { text: Parallel Computing, topics: [systems] }
 
+# ================================================================
+# -------------------------- EXPERIENCE --------------------------
+# ================================================================
   - title: Experience
     entries:
       # - name: SpaceX (Space Exploration Technologies Corp)
@@ -114,7 +126,7 @@ sections:
         location: Nazareth, PA
         role: Software Engineering Intern (sole developer)
         dates: June 2025 – Feb. 2026
-        stack: [C++, Java, AWS IoT, Bash, Android, Ubuntu]
+        stack: [C++, Java, AWS (IoT Core, S3), Bash, Android, Ubuntu]
         bullets:
           - >-
             Redesigned the crane guidance system's material tracking from two
@@ -158,6 +170,9 @@ sections:
             content, mentored and coordinated teams of junior TAs, and
             co-designed the course alongside the professor
 
+# ================================================================
+# -------------------------- PROJECTS ----------------------------
+# ================================================================
   - title: Projects
     entries:
       - name: Mars Rover (University Rover Challenge)
@@ -216,7 +231,8 @@ sections:
         topics: [webdev, course_project]
         role: Team Lead, Full-stack Development
         dates: Fall 2024
-        stack: [JavaScript, Java, React, Javalin, NodeJS, Maven, PostgreSQL]
+        # stack: [JavaScript, Java, React, Javalin, Node.js, Maven, PostgreSQL]
+        stack: [JavaScript/React, Java/Javalin, PostgreSQL]
         bullets:
           - >-
             Built a full-stack messaging app as team lead; implemented Google
@@ -233,6 +249,9 @@ sections:
             from scratch in Rust; the interpreter tokenizes, parses, and
             directly executes source code
 
+# ================================================================
+# --------------------------- SKILLS -----------------------------
+# ================================================================
   - title: Skills
     entries:
       - bullets:
@@ -240,18 +259,24 @@ sections:
             items:
               - C++
               - Java
-              - JavaScript
+              # - TypeScript
+              # - JavaScript
+              - TypeScript/JavaScript
               - Python
               - Bash
-              - { text: SQL, topics: [webdev] }
+              # - { text: SQL, topics: [webdev] }
+              - { text: PostgreSQL, topics: [] }
               - Rust
           - label: "Frameworks & Libraries:"
             items:
-              - { text: ROS2, topics: [robotics] }
+              - { text: Next.js, topics: [webdev] }
               - { text: React, topics: [webdev] }
               - Boost
-              - Android SDK
+              - { text: Android SDK, topics: [mobile_dev] }
               - { text: WebGL, topics: [webdev, gamedev] }
+              - { text: Qt, topics: [systems]}
+              - { text: MQTT, topics: [systems]}
+              - { text: ROS 2, topics: [robotics] }
           - label: "Tools & Platforms:"
             items:
               - AWS (IoT Core, S3)
@@ -259,8 +284,14 @@ sections:
               - Git
               - Linux
               - { text: Node.js, topics: [webdev] }
-          - label: "Other:"
-            text: Agile/Scrum methodologies, Jira
+              - Jira
+              - Bitbucket
+              - Confluence
+              # - GitHub
+          # - label: "Other:"
+          #   items:
+          #     # - Agile/Scrum methodologies
+          #     - CI/CD
           - label: "Interests:"
             id: interests
-            text: Film, game design, speedcubing (25sec avg), trombone (11 years, section leader)
+            text: Film, game design, speedcubing (25 sec average), trombone (11 years, section leader)
