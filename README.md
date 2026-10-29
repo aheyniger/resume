@@ -16,6 +16,7 @@ Built with [Typst](https://typst.app) from YAML data.
 | `checks.typ` | Checks on the two YAML files, so typos stop the build instead of dropping text |
 | `check-text.sh` | Checks the PDFs' text comes out intact, as resume screeners read it |
 | `make-site.sh`, `site-template.html` | Build the GitHub Pages site: the published PDFs plus an index page |
+| `release.sh` | Creates the GitHub release for a tag (run by CI) |
 | `build.sh` | Builds the PDFs into `out/` with the right names |
 | `.typst-version` | The Typst release every build uses, locally and in CI |
 
@@ -86,6 +87,25 @@ when a screener reads the right-aligned dates after the lines beside them. To
 run it locally after a build: `./check-text.sh out/*.pdf` (Git Bash comes
 with a `pdftotext`, though a different one from CI's, so results can differ).
 
+### When the text check fails
+
+On a PR, a failed check just fails the run. On `main` and on tags, the run
+instead stops before publishing and waits for approval, in case what it
+flagged is fine:
+
+1. GitHub emails you, and the run's page shows **Review deployments**.
+2. Read what the check flagged on the run's summary page (or in the build
+   job's "Check PDF text" step).
+3. **Approve** (pick `text-check-override`) to publish anyway: Pages deploys
+   the files already built, or for a tag, a fresh machine rebuilds that
+   version and creates the release. **Reject**, or leave it for 30 days, and
+   nothing is published; the run fails.
+
+Passing runs never wait. Approval comes from the `text-check-override`
+environment (Settings > Environments), whose required reviewers are the
+people who can approve. Its deployment history in the repo's sidebar is a
+log of every approved failure.
+
 Pushes to `main` then publish the versions that don't have `publish: false` to
 [GitHub Pages](https://aheyniger.github.io/resume/), with an index page made
 from `site-template.html` (light and dark). To preview it, run `./build.sh`
@@ -104,8 +124,9 @@ downloadable artifact holds only the published ones too.
 
 Pushing a git tag named `<version>/<label>` creates a permanent GitHub release
 holding just that version, as `Anders_Heyniger_Resume.pdf`, exactly as it was at the
-tagged commit. The tag's message (with `-a -m`) becomes the release notes. The
-version can be one marked `build: false`, so one-off versions stay off Pages.
+tagged commit (see `release.sh`). The tag's message (with `-a -m`) becomes the
+release notes. The version can be one marked `build: false`, so one-off
+versions stay off Pages.
 
 A tag points at a commit, so commit any changes first. Then:
 

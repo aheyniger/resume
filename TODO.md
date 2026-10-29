@@ -15,6 +15,8 @@
 - add some way/option of putting stack/tech on the name line, right after the project/company name separated by a |, to save space (but prefer separate stack line)
 - maybe a periodic auto-release to kind of just snapshot my resume over time more generally
     - only do the periodic release when stuff has also actually changed. like, if it is run every month, then only release it in the months where there's changes, so that you dont just not make any changes for 7 months but still have like 7 auto-releases
+- Layout config file to tweak layout parameters, such as margins, text size, etc.
+    - may be good to tie this directly to theme choice, since different themes may call for different config options.
 
 ## Changes
 - recommend typemist extension in README if using vscode
@@ -22,6 +24,8 @@
 - make the GitHub Pages page differentiate tailored general versions and ones for specific companies
 - add comments as personal notes to content.yaml to do things like give a full summary/description/explanation/rundown of a job/project and things to remember when considering or updating it
 - split CLAUDE.md into a "How to use the tool" section that explains this whole resume tool i have, and then a "How to do the resume" section that is for specific things to the resume itself, like how to abbreviate months, or how many items can be in a stack line, or to make sure to use official spellings for tools in the stack
+- readme should explain setup steps
+- maybe CI only runs when relevant files are updated, so like dont run it when just changing things like README, TODO, etc.
 
 ## Fixes
 - Fix/redo comments throughout app
@@ -29,8 +33,12 @@
 - Fix/redo readme
 - make this work on mac/linux, including better error messages and shit
     - one example is how we specifically refer to winget for typst version and shit
+- go back through git history and remove phone number (and other private data if needed) from history
 
 ## Stuff to check
 - is this system/workflow/whatever a good way to let ai modify and use my resume (for automated job applications)
 - ask claude about more topics to add for what i have
 - review CLAUDE.md
+- should i be hiding my email as well? what about the other links?
+    - on the side of hiding it, it cant be gotten by scammers or bots, and recruiters will just need to go to my linkedin instead
+    - on the side against hiding it, the email may already be achievable by looking at my github or something else anyway

@@ -12,6 +12,8 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write # needed to create releases
+    outputs:
+      text-check: ${{ steps.check.outcome }} # success or failure
     steps:
       - uses: actions/checkout@v4
 
@@ -43,13 +45,30 @@ jobs:
           fi
 
       # Checks every built PDF reads in order as plain text, the way resume
-      # screeners see it (see check-text.sh).
+      # screeners see it (see check-text.sh). What it flags goes on the run's
+      # summary page. On main and tags a failure doesn't stop the run: the
+      # approve job below waits for someone to look and approve it, and
+      # nothing is published until then. Other runs (PRs) just fail.
       - name: Check PDF text
+        id: check
+        continue-on-error: ${{ github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/') }}
         run: |
           if ! command -v pdftotext > /dev/null; then
             sudo apt-get update -qq && sudo apt-get install -y -qq poppler-utils
           fi
-          bash check-text.sh out/*.pdf
+          set -o pipefail
+          if bash check-text.sh out/*.pdf | tee check-text.log; then exit 0; fi
+          {
+            echo "## PDF text check failed"
+            echo
+            echo "On main or a tag, the run waits for approval before publishing."
+            echo
+            echo '```'
+            cat check-text.log
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+          echo "::error title=PDF text check failed::See the run summary for details"
+          exit 1
 
       # Only versions without `publish: false` leave the build machine: run
       # artifacts on a public repo can be downloaded by anyone signed in to
@@ -73,34 +92,61 @@ jobs:
           path: site
 
       # Pushing a tag saves a permanent release holding that one version as it
-      # was at the tagged commit, under the plain filename a recruiter sees.
-      # The tag's message, if it has one, becomes the release notes. Pushing
-      # a tag name again (after deleting and recreating the tag) replaces its
-      # release instead of failing.
+      # was at the tagged commit (see release.sh). If the text check failed,
+      # the approve job makes the release instead, once approved.
       - name: Create tagged release
+        if: startsWith(github.ref, 'refs/tags/') && steps.check.outcome == 'success'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: bash release.sh out/*.pdf
+
+  # Runs only when the text check failed on main or a tag, and waits for a
+  # reviewer of the text-check-override environment (set up in the repo's
+  # Settings > Environments) to approve it from the run's page. Approving
+  # publishes anyway: on main it lets deploy-pages go ahead with the files
+  # already uploaded, and on a tag it rebuilds that version here and makes
+  # the release, so nothing of a rejected tag run leaves the build machine.
+  # Rejecting it, or leaving it for 30 days, fails the run.
+  approve:
+    needs: build
+    if: needs.build.outputs.text-check == 'failure'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # needed to create releases
+    environment: text-check-override
+    steps:
+      - name: Note the approval
+        run: echo "Publishing despite the failed PDF text check; see the build job's summary for what it flagged."
+
+      - uses: actions/checkout@v4
+        if: startsWith(github.ref, 'refs/tags/')
+
+      - name: Read Typst version
+        if: startsWith(github.ref, 'refs/tags/')
+        id: typst-version
+        run: echo "version=$(tr -d '[:space:]' < .typst-version)" >> "$GITHUB_OUTPUT"
+
+      - uses: typst-community/setup-typst@v4
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          typst-version: ${{ steps.typst-version.outputs.version }}
+
+      - name: Build PDF and create tagged release
         if: startsWith(github.ref, 'refs/tags/')
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          filename=$(typst eval 'yaml("versions.yaml").filename' --format yaml)
-          mkdir -p out/release
-          cp out/*.pdf "out/release/$filename.pdf"
+          bash build.sh "${GITHUB_REF_NAME%%/*}"
+          bash release.sh out/*.pdf
 
-          git fetch --force origin "refs/tags/$GITHUB_REF_NAME:refs/tags/$GITHUB_REF_NAME"
-          notes=""
-          if [ "$(git cat-file -t "$GITHUB_REF_NAME")" = tag ]; then # annotated tag
-            notes=$(git tag -l --format='%(contents)' "$GITHUB_REF_NAME")
-          fi
-          # No --cleanup-tag: the tag that triggered this run must stay.
-          gh release delete "$GITHUB_REF_NAME" --yes 2>/dev/null || true
-          gh release create "$GITHUB_REF_NAME" "out/release/$filename.pdf" \
-            --title "$GITHUB_REF_NAME" \
-            --notes "${notes:-Resume as of tag $GITHUB_REF_NAME.}"
-
-  # Publishes the PDFs from main to https://<user>.github.io/<repo>/
+  # Publishes the PDFs from main to https://<user>.github.io/<repo>/, once
+  # the text check passed or a failure was approved. `!cancelled()` lets it
+  # run when the approve job was skipped because the check passed.
   deploy-pages:
-    needs: build
-    if: github.ref == 'refs/heads/main'
+    needs: [build, approve]
+    if: >-
+      ${{ !cancelled() && github.ref == 'refs/heads/main' && needs.build.result == 'success'
+      && (needs.build.outputs.text-check == 'success' || needs.approve.result == 'success') }}
     runs-on: ubuntu-latest
     permissions:
       pages: write

@@ -13,6 +13,8 @@ document every field. Read those before changing anything.
   named near the top.
 - **A new field:** add it to the field lists in `checks.typ` and document it in
   the header of the YAML file it belongs to, or the build rejects it.
+- **CI:** `.github/workflows/build.yml`. Release steps live in `release.sh`,
+  which two jobs call, so change them there, not in the workflow.
 
 ## Checking a change
 
