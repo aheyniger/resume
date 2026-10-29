@@ -2,7 +2,7 @@
 # Checks that resume PDFs come out right as plain text, which is how resume
 # screeners (applicant tracking systems) read them. Run from the repo root:
 #
-#   ./check-text.sh out/*.pdf
+#   ./scripts/check-text.sh out/*.pdf
 #
 # For each PDF it compares two extractions by pdftotext: the words in the
 # order Typst drew them (-raw), and the lines pdftotext works out from the
@@ -19,7 +19,7 @@
 set -euo pipefail
 
 if [ $# -eq 0 ]; then
-  echo "usage: ./check-text.sh <pdf>..." >&2
+  echo "usage: ./scripts/check-text.sh <pdf>..." >&2
   exit 2
 fi
 

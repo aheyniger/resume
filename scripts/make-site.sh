@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
 # Collects the published PDFs from out/ into site/ for GitHub Pages, with an
-# index page made from site-template.html. Run ./build.sh first. CI runs this
-# on every push to main; locally it's handy for previewing site/index.html.
+# index page made from site-template.html. Run ./scripts/build.sh first. CI
+# runs this on every push to main; locally it's handy for previewing
+# site/index.html.
 set -euo pipefail
-cd "$(dirname "$0")"
+cd "$(dirname "$0")/.."
 
 eval_yaml() { typst eval "$1" --format yaml; }
 default=$(eval_yaml 'yaml("versions.yaml").default')
@@ -20,7 +21,7 @@ mkdir -p site
 main="" tailored=""
 while read -r version pdf; do
   if [ ! -f "$pdf" ]; then
-    echo "error: $pdf hasn't been built; run ./build.sh first" >&2
+    echo "error: $pdf hasn't been built; run ./scripts/build.sh first" >&2
     exit 1
   fi
   cp "$pdf" site/
@@ -36,7 +37,7 @@ while read -r version pdf; do
   else
     tailored+="$item"$'\n'
   fi
-done < <(bash build.sh --list-published)
+done < <(bash scripts/build.sh --list-published)
 
 if [ -n "$tailored" ]; then
   tailored="  <h2>Tailored versions</h2>

@@ -39,16 +39,16 @@ jobs:
               echo "error: tag '$GITHUB_REF_NAME' should look like <version>/<label>, e.g. amazon/2026-10-sde-intern"
               exit 1
             fi
-            bash build.sh "${GITHUB_REF_NAME%%/*}"
+            bash scripts/build.sh "${GITHUB_REF_NAME%%/*}"
           else
-            bash build.sh
+            bash scripts/build.sh
           fi
 
       # Checks every built PDF reads in order as plain text, the way resume
-      # screeners see it (see check-text.sh). What it flags goes on the run's
-      # summary page. On main and tags a failure doesn't stop the run: the
-      # approve job below waits for someone to look and approve it, and
-      # nothing is published until then. Other runs (PRs) just fail.
+      # screeners see it (see scripts/check-text.sh). What it flags goes on
+      # the run's summary page. On main and tags a failure doesn't stop the
+      # run: the approve job below waits for someone to look and approve it,
+      # and nothing is published until then. Other runs (PRs) just fail.
       - name: Check PDF text
         id: check
         continue-on-error: ${{ github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/') }}
@@ -57,7 +57,7 @@ jobs:
             sudo apt-get update -qq && sudo apt-get install -y -qq poppler-utils
           fi
           set -o pipefail
-          if bash check-text.sh out/*.pdf | tee check-text.log; then exit 0; fi
+          if bash scripts/check-text.sh out/*.pdf | tee check-text.log; then exit 0; fi
           {
             echo "## PDF text check failed"
             echo
@@ -72,11 +72,11 @@ jobs:
 
       # Only versions without `publish: false` leave the build machine: run
       # artifacts on a public repo can be downloaded by anyone signed in to
-      # GitHub, so they come from site/ too, not out/. make-site.sh also
-      # writes the index page from site-template.html.
+      # GitHub, so they come from site/ too, not out/. scripts/make-site.sh
+      # also writes the index page from site-template.html.
       - name: Collect published PDFs
         if: ${{ !startsWith(github.ref, 'refs/tags/') }}
-        run: bash make-site.sh
+        run: bash scripts/make-site.sh
 
       # Downloadable from the run's summary page for 90 days. Tag runs skip
       # this; their release has the PDF.
@@ -92,13 +92,14 @@ jobs:
           path: site
 
       # Pushing a tag saves a permanent release holding that one version as it
-      # was at the tagged commit (see release.sh). If the text check failed,
-      # the approve job makes the release instead, once approved.
+      # was at the tagged commit (see scripts/ci/release.sh). If the text
+      # check failed, the approve job makes the release instead, once
+      # approved.
       - name: Create tagged release
         if: startsWith(github.ref, 'refs/tags/') && steps.check.outcome == 'success'
         env:
           GH_TOKEN: ${{ github.token }}
-        run: bash release.sh out/*.pdf
+        run: bash scripts/ci/release.sh out/*.pdf
 
   # Runs only when the text check failed on main or a tag, and waits for a
   # reviewer of the text-check-override environment (set up in the repo's
@@ -136,8 +137,8 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          bash build.sh "${GITHUB_REF_NAME%%/*}"
-          bash release.sh out/*.pdf
+          bash scripts/build.sh "${GITHUB_REF_NAME%%/*}"
+          bash scripts/ci/release.sh out/*.pdf
 
   # Publishes the PDFs from main to https://<user>.github.io/<repo>/, once
   # the text check passed or a failure was approved. `!cancelled()` lets it

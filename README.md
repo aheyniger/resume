@@ -14,10 +14,10 @@ Built with [Typst](https://typst.app) from YAML data.
 | `layout.typ` | Layout and styling, shared by every version |
 | `private.example.yaml` | Stand-ins for private details; copy to `private.yaml` (gitignored) with the real ones |
 | `checks.typ` | Checks on the two YAML files, so typos stop the build instead of dropping text |
-| `check-text.sh` | Checks the PDFs' text comes out intact, as resume screeners read it |
-| `make-site.sh`, `site-template.html` | Build the GitHub Pages site: the published PDFs plus an index page |
-| `release.sh` | Creates the GitHub release for a tag (run by CI) |
-| `build.sh` | Builds the PDFs into `out/` with the right names |
+| `scripts/build.sh` | Builds the PDFs into `out/` with the right names |
+| `scripts/check-text.sh` | Checks the PDFs' text comes out intact, as resume screeners read it |
+| `scripts/make-site.sh`, `site-template.html` | Build the GitHub Pages site: the published PDFs plus an index page |
+| `scripts/ci/release.sh` | Creates the GitHub release for a tag (`scripts/ci/` holds the scripts only CI runs) |
 | `.typst-version` | The Typst release every build uses, locally and in CI |
 
 ## Building
@@ -27,16 +27,16 @@ since layout can change between releases. To install that exact version:
 `winget install --id Typst.Typst --version <version>`. To upgrade, change the
 file and commit it; CI reads it too.
 
-Run from Git Bash (or `bash build.sh ...` from PowerShell):
+Run from Git Bash (or `bash scripts/build.sh ...` from PowerShell):
 
 ```bash
-./build.sh                  # every version -> out/Anders_Heyniger_Resume*.pdf
-./build.sh --all            # including versions with `build: false`
-./build.sh robotics         # just one version
-./build.sh --watch          # rebuild the default version on every save
-./build.sh --watch webdev   # same, for one tailored version
-./build.sh --private        # with private details -> out/private/
-./build.sh --include-system-fonts  # also allow fonts installed on this computer
+./scripts/build.sh                         # every version -> out/Anders_Heyniger_Resume*.pdf
+./scripts/build.sh --all                   # including versions with `build: false`
+./scripts/build.sh robotics                # just one version
+./scripts/build.sh --watch                 # rebuild the default version on every save
+./scripts/build.sh --watch webdev          # same, for one tailored version
+./scripts/build.sh --private               # with private details -> out/private/
+./scripts/build.sh --include-system-fonts  # also allow fonts installed on this computer
 ```
 
 `--private` and `--include-system-fonts` work with any of the others.
@@ -66,7 +66,7 @@ Two more tools for tailoring (details in the comments at the top of each file):
 - **Different wording:** give an item `variants`, wordings keyed by topic. A
   version uses the first one whose topic it selects, otherwise the plain `text`.
 - **Page limit:** give a version `max-pages: 1`. Going over fails the build;
-  `./build.sh --watch <version>` and the VS Code preview mark the extra pages
+  `./scripts/build.sh --watch <version>` and the VS Code preview mark the extra pages
   in red instead, so you can see what to cut.
 
 In any text, `*asterisks*` make bold (`\*` for a literal asterisk), and straight
@@ -79,12 +79,12 @@ unknown section names stop the build with a message saying where the problem is.
 
 GitHub Actions (`.github/workflows/build.yml`) runs on every push to `main` and
 every pull request. It builds every version without `build: false`, so a broken
-version fails the run right away, and runs `check-text.sh` on the PDFs: it
+version fails the run right away, and runs `scripts/check-text.sh` on the PDFs: it
 extracts their text with `pdftotext` and fails if a word goes missing, a
 line gets mixed with words from elsewhere (e.g. two columns read across), the
 name is missing, or some text won't extract cleanly. Whole lines may move, as
 when a screener reads the right-aligned dates after the lines beside them. To
-run it locally after a build: `./check-text.sh out/*.pdf` (Git Bash comes
+run it locally after a build: `./scripts/check-text.sh out/*.pdf` (Git Bash comes
 with a `pdftotext`, though a different one from CI's, so results can differ).
 
 ### When the text check fails
@@ -108,10 +108,10 @@ log of every approved failure.
 
 Pushes to `main` then publish the versions that don't have `publish: false` to
 [GitHub Pages](https://aheyniger.github.io/resume/), with an index page made
-from `site-template.html` (light and dark). To preview it, run `./build.sh`
-then `./make-site.sh` and open `site/index.html`.
+from `site-template.html` (light and dark). To preview it, run `./scripts/build.sh`
+then `./scripts/make-site.sh` and open `site/index.html`.
 
-| Version setting | `./build.sh` | CI checks | Pages |
+| Version setting | `./scripts/build.sh` | CI checks | Pages |
 | --- | --- | --- | --- |
 | (neither) | yes | yes | yes |
 | `publish: false` (e.g. for one application) | yes | yes | no |
@@ -124,7 +124,7 @@ downloadable artifact holds only the published ones too.
 
 Pushing a git tag named `<version>/<label>` creates a permanent GitHub release
 holding just that version, as `Anders_Heyniger_Resume.pdf`, exactly as it was at the
-tagged commit (see `release.sh`). The tag's message (with `-a -m`) becomes the
+tagged commit (see `scripts/ci/release.sh`). The tag's message (with `-a -m`) becomes the
 release notes. The version can be one marked `build: false`, so one-off
 versions stay off Pages.
 
@@ -145,7 +145,7 @@ git push -f origin amazon/2026-10-sde-intern
 ```
 
 `git tag -l "amazon/*"` lists every release made from a version, and
-`git checkout <tag>` then `./build.sh <version>` rebuilds one locally.
+`git checkout <tag>` then `./scripts/build.sh <version>` rebuilds one locally.
 
 Fonts (EB Garamond, SIL Open Font License) live in `fonts/`, and builds use only
 those, so local and CI PDFs are identical. To try a font installed on your

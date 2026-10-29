@@ -1,7 +1,7 @@
 # Notes for AI assistants
 
 Anders Heyniger's resume: content in YAML, layout in Typst, built into PDFs by
-`build.sh`. README.md explains the system (files, building, tailoring,
+`scripts/build.sh`. README.md explains the system (files, building, tailoring,
 publishing), and the comments at the top of `content.yaml` and `versions.yaml`
 document every field. Read those before changing anything.
 
@@ -13,17 +13,21 @@ document every field. Read those before changing anything.
   named near the top.
 - **A new field:** add it to the field lists in `checks.typ` and document it in
   the header of the YAML file it belongs to, or the build rejects it.
-- **CI:** `.github/workflows/build.yml`. Release steps live in `release.sh`,
-  which two jobs call, so change them there, not in the workflow.
+- **CI:** `.github/workflows/build.yml`. Release steps live in
+  `scripts/ci/release.sh`, which two jobs call, so change them there, not in
+  the workflow.
+- **Scripts:** ones you run go in `scripts/`; ones only CI runs go in
+  `scripts/ci/`. Each `cd`s to the repo root, except `check-text.sh`, which
+  takes PDF paths and so runs from the root.
 
 ## Checking a change
 
 Every change gets checked before it's called done:
 
 ```bash
-./build.sh                    # all versions; fails on bad fields, warnings, page limits
-./build.sh --private          # same, with private.yaml filled in -> out/private/
-./check-text.sh out/*.pdf     # the text reads intact, as resume screeners see it
+./scripts/build.sh                 # all versions; fails on bad fields, warnings, page limits
+./scripts/build.sh --private       # same, with private.yaml filled in -> out/private/
+./scripts/check-text.sh out/*.pdf  # the text reads intact, as resume screeners see it
 ```
 
 Then look at the result, since a valid build can still look wrong. Render

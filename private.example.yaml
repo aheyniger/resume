@@ -1,5 +1,6 @@
 # Details kept out of the public repo. Copy this file to private.yaml
-# (gitignored), fill in the real values, and build with ./build.sh --private.
+# (gitignored), fill in the real values, and build with
+# ./scripts/build.sh --private.
 #
 # Each key matches a `private: <key>` in content.yaml. A value is the item's
 # text, or a set of its fields (e.g. text plus link). Every key used in

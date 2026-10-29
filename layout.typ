@@ -1,8 +1,8 @@
 // Resume layout. All content lives in content.yaml and the list of
 // tailored versions in versions.yaml; this file only controls how it looks.
-// Build with ./build.sh (see README), which also supplies the fonts in fonts/,
-// the version to build, and strict page limits. Compiling this file directly
-// skips those, so use ./build.sh for any PDF you keep.
+// Build with ./scripts/build.sh (see README), which also supplies the fonts in
+// fonts/, the version to build, and strict page limits. Compiling this file
+// directly skips those, so use ./scripts/build.sh for any PDF you keep.
 
 #import "checks.typ": check-content, check-versions, fill-private
 
@@ -10,8 +10,8 @@
 #let raw = yaml("content.yaml")
 
 // Items marked `private: <key>` get their fields from the gitignored
-// private.yaml in `./build.sh --private` builds and are left out of every
-// other build. The checks run on the content filled in from the committed
+// private.yaml in `./scripts/build.sh --private` builds and are left out of
+// every other build. The checks run on the content filled in from the committed
 // private.example.yaml, so even public builds catch a key missing from it.
 #let private = sys.inputs.at("private", default: "false") == "true"
 #let checked = fill-private(raw, yaml("private.example.yaml"), "private.example.yaml")
@@ -231,7 +231,7 @@
     assert(
       pages <= max-pages,
       message: "version '" + version-name + "' is " + str(pages) + " pages, over its max-pages of " + str(max-pages)
-        + " (preview it with ./build.sh --watch " + version-name + " to see what spills over)",
+        + " (preview it with ./scripts/build.sh --watch " + version-name + " to see what spills over)",
     )
   }
 }

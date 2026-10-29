@@ -5,12 +5,12 @@
 # made for that tag is replaced. CI runs this; it needs the GitHub CLI signed
 # in (GH_TOKEN) and GITHUB_REF_NAME set to the tag:
 #
-#   bash release.sh out/<pdf>
+#   bash scripts/ci/release.sh out/<pdf>
 set -euo pipefail
-cd "$(dirname "$0")"
+cd "$(dirname "$0")/../.."
 
 if [ $# -ne 1 ] || [ ! -f "$1" ]; then
-  echo "usage: bash release.sh <pdf> (one PDF, already built)" >&2
+  echo "usage: bash scripts/ci/release.sh <pdf> (one PDF, already built)" >&2
   exit 2
 fi
 tag=${GITHUB_REF_NAME:?set GITHUB_REF_NAME to the tag to release}

@@ -12,18 +12,20 @@
 #   sections  optional: section titles in the order to show them (others
 #             are dropped). Leave it out to use the order in content.yaml.
 #   max-pages optional: the most pages this version may take. Going over
-#             fails the build; `./build.sh --watch` and the VS Code preview
-#             instead mark the extra pages in red so you can see what to cut.
+#             fails the build; `./scripts/build.sh --watch` and the VS Code
+#             preview instead mark the extra pages in red so you can see
+#             what to cut.
 #   publish   optional: set to false to keep this version off GitHub Pages.
 #             It's still built and checked locally and in CI.
 #   build     optional: set to false to set this version aside: it isn't
-#             built by `./build.sh` or checked in CI, and isn't published.
-#             `./build.sh --all` and `./build.sh <version>` still build it.
+#             built by `./scripts/build.sh` or checked in CI, and isn't
+#             published. `./scripts/build.sh --all` and
+#             `./scripts/build.sh <version>` still build it.
 #
-#                      ./build.sh   CI checks   Pages
-#   (neither)              yes         yes       yes
-#   publish: false         yes         yes       no
-#   build: false           no          no        no
+#                      ./scripts/build.sh   CI checks   Pages
+#   (neither)                 yes              yes       yes
+#   publish: false            yes              yes       no
+#   build: false              no               no        no
 #
 # A tag release (see README) builds the version it names, whatever these say.
 

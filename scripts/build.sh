@@ -1,14 +1,19 @@
 #!/usr/bin/env bash
 # Builds resume PDFs into out/, named from versions.yaml.
 #
-#   ./build.sh                    build every version without `build: false`
-#   ./build.sh --all              build every version, including `build: false`
-#   ./build.sh robotics webdev    build just those versions
-#   ./build.sh --watch [version]  rebuild one version on every save
-#                                 (default: the default version)
-#   ./build.sh --list-published   print "<version> <pdf path>" for each version
-#                                 that gets published (neither `build: false`
-#                                 nor `publish: false`), without building
+#   ./scripts/build.sh                    build every version without
+#                                         `build: false`
+#   ./scripts/build.sh --all              build every version, including
+#                                         `build: false`
+#   ./scripts/build.sh robotics webdev    build just those versions
+#   ./scripts/build.sh --watch [version]  rebuild one version on every save
+#                                         (default: the default version)
+#   ./scripts/build.sh --list-published   print "<version> <pdf path>" for
+#                                         each version that gets published
+#                                         (neither `build: false` nor
+#                                         `publish: false`), without building
+#
+# It works from any directory: paths are relative to the repo root.
 #
 # Add --private to any build or --watch to fill in the details from the
 # gitignored private.yaml (e.g. the phone number). Those PDFs go to
@@ -20,7 +25,7 @@
 # layout.typ and add --include-system-fonts to any build or --watch; those
 # PDFs can look different elsewhere, so it's only for experimenting.
 set -euo pipefail
-cd "$(dirname "$0")"
+cd "$(dirname "$0")/.."
 
 # Layout can change between Typst releases, so every build uses the version in
 # .typst-version (CI reads the same file). Stop rather than warn: a warning is
