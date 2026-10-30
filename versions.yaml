@@ -22,11 +22,6 @@
 #             published. `./scripts/build.sh --all` and
 #             `./scripts/build.sh <version>` still build it.
 #
-#                      ./scripts/build.sh   CI checks   Pages
-#   (neither)                 yes              yes       yes
-#   publish: false            yes              yes       no
-#   build: false              no               no        no
-#
 # A tag release (see README) builds the version it names, whatever these say.
 
 filename: Anders_Heyniger_Resume

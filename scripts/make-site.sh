@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # Collects the published PDFs from out/ into site/ for GitHub Pages, with an
 # index page made from site-template.html. Run ./scripts/build.sh first. CI
-# runs this on every push to main; locally it's handy for previewing
-# site/index.html.
+# runs this on every run except tags (only main deploys it); locally it's
+# handy for previewing site/index.html.
 set -euo pipefail
 cd "$(dirname "$0")/.."
 

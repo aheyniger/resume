@@ -65,9 +65,8 @@
 }
 
 // ---- Style knobs ----
-// EB Garamond is kept in fonts/ so every machine renders the same PDF.
 #let body-font = "EB Garamond"
-#let body-size = 12.25pt // EB Garamond runs narrow; this matches Word's 12pt Garamond
+#let body-size = 12.25pt // EB Garamond runs narrow, so slightly over 12pt
 #let name-size = 28pt
 #let contact-size = body-size // shrinks to fit if the contact line is ever too wide
 #let rule-stroke = 0.75pt
@@ -88,8 +87,8 @@
 )
 #set text(font: body-font, size: body-size, lang: "en")
 #set par(leading: line-gap, spacing: line-gap)
-// EB Garamond's italic is wider than its roman; shrink it to keep the
-// compact italic lines of the original Word version.
+// EB Garamond's italic is wider than its roman; shrink it to keep italic
+// lines compact.
 #show emph: set text(size: 0.91em)
 #set list(marker: [•], indent: 0.1in, body-indent: 0.15in, spacing: line-gap)
 
@@ -141,7 +140,7 @@
   lhs, align(right, rhs),
 )
 
-// A full-width block with a rule under it, like Word's paragraph bottom border.
+// A full-width block with a rule under it.
 #let underlined(body) = block(
   width: 100%,
   stroke: (bottom: rule-stroke),

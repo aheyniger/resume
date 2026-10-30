@@ -33,12 +33,8 @@
 - Fix/redo readme
 - make this work on mac/linux, including better error messages and shit
     - one example is how we specifically refer to winget for typst version and shit
-- go back through git history and remove phone number (and other private data if needed) from history
 
 ## Stuff to check
 - is this system/workflow/whatever a good way to let ai modify and use my resume (for automated job applications)
 - ask claude about more topics to add for what i have
 - review CLAUDE.md
-- should i be hiding my email as well? what about the other links?
-    - on the side of hiding it, it cant be gotten by scammers or bots, and recruiters will just need to go to my linkedin instead
-    - on the side against hiding it, the email may already be achievable by looking at my github or something else anyway

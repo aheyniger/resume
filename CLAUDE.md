@@ -67,7 +67,7 @@ Keep new content consistent with what's there:
 - **YAML:** quote any value starting with `*` (bold markup), since YAML reads a
   leading `*` as an alias: `- "*GPA: 3.68/4.0*; ..."`. Long bullets use `>-`.
   Write straight quotes; the layout curls them.
-- **Typst 0.15** (pinned in `.typst-version`; don't change it casually):
+- **Typst** (version pinned in `.typst-version`; don't change it casually):
   - A `#let` written in markup ends at the line break. Wrap multi-line
     expressions in `{ }` or `( )`, or the rest of the expression prints as
     text on the page.
@@ -77,8 +77,8 @@ Keep new content consistent with what's there:
 
 ## Don't
 
-- Commit `private.yaml` (gitignored) or `TODO.md` (Anders's own notes), or put
-  private details like a phone number in `content.yaml`. They go in
-  `private.yaml` with a stand-in in `private.example.yaml`.
+- Commit `private.yaml` (gitignored), or put private details like a phone
+  number in `content.yaml`. They go in `private.yaml` with a stand-in in
+  `private.example.yaml`.
 - Commit, push, or create tags or releases unless asked. Pushing to `main`
   publishes to GitHub Pages, and a tag makes a public release.
